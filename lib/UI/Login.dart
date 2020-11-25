@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_my_health/UI/MobileNumber.dart';
 
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
@@ -20,7 +21,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFe8ffc6),
+      backgroundColor: Color(0xFFFFFFFF),
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -51,23 +52,32 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                SizedBox(height: 18),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                  child: Container(
-                    height: 45,
-                    color: Colors.green,
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.mobile_friendly),
-                        SizedBox(width: 20),
-                        Text("Phone Number")
-                      ],
-                    ),
-                  ),
-                ),
+                SizedBox(height: 12),
+             
+
+
+                 Padding(
+                padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
+child: GestureDetector(
+                        onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MobileNumber()));                    },
+                        child: Container(
+                         
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.all(Radius.circular(6))
+                          ),
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text("Phone Number", style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600
+                            ),),
+                          ),
+                        ),
+                      ),
+              ),
                 SizedBox(height: 30),
                 Container(
                     child: Row(
