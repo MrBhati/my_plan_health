@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_my_health/Helpers/ApiHelper.dart';
 import 'package:plan_my_health/UI/Home.dart';
 
 class VerifyNumber extends StatefulWidget {
@@ -9,6 +10,17 @@ class VerifyNumber extends StatefulWidget {
 }
 
 class _VerifyNumberState extends State<VerifyNumber> {
+
+   ApiHelper apiHelper = ApiHelper();
+  bool _isloading = false; 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,7 +162,15 @@ class _VerifyNumberState extends State<VerifyNumber> {
                 padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
 child: GestureDetector(
                         onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));                    },
+
+            
+                        setState(() {
+                          _isloading = true;
+                        });
+                          apiHelper.verifyNumber(context, "");
+
+                        },
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));                    },
                         child: Container(
                          
                           decoration: BoxDecoration(
@@ -160,7 +180,7 @@ child: GestureDetector(
                           alignment: Alignment.center,
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Text("Verify", style: TextStyle(
+                               child: Text(_isloading == false ? "Verify" : "Loading...", style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600
                             ),),

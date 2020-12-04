@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_my_health/Helpers/ApiHelper.dart';
 import 'package:plan_my_health/UI/VerifyNumber.dart';
 
 class MobileNumber extends StatefulWidget {
@@ -9,6 +10,18 @@ class MobileNumber extends StatefulWidget {
 }
 
 class _MobileNumberState extends State<MobileNumber> {
+
+  ApiHelper apiHelper = ApiHelper();
+  bool _isloading = false; 
+  TextEditingController _mobileController;
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _mobileController = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +66,7 @@ child: Row(
    child: Padding(
      padding: const EdgeInsets.all(8.0),
      child: TextFormField(
+       controller: _mobileController,
        style: TextStyle(color: Colors.black,
                                fontSize: 22,
                                fontWeight: FontWeight.w500),
@@ -96,7 +110,14 @@ child: Row(
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: GestureDetector(
                       onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyNumber()));                    },
+                        setState(() {
+                          _isloading = true;
+                        });
+                      
+                      apiHelper.mobileLogin(context, _mobileController.text);
+                    
+                      },
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyNumber()));                    },
                       child: Container(
                        
                         decoration: BoxDecoration(
@@ -106,7 +127,7 @@ child: Row(
                         alignment: Alignment.center,
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Text("Continue", style: TextStyle(
+                          child: Text(_isloading == false ? "Continue" : "Loading...", style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600
                           ),),
