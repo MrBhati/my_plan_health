@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/UI/Home.dart';
 import 'package:plan_my_health/UI/VerifyNumber.dart';
+import 'package:plan_my_health/model/OrderList.dart';
 
 class ApiHelper {
     String _baseUrlDev = "";
@@ -110,4 +112,16 @@ print(response);
     }
     return false;
   }
+
+Future<OrderList> getOderList() async {
+  Response response = await dio.get("http://3.15.233.253:5000/orders");
+
+   if (response.statusCode == 200) {
+        OrderList orderList = OrderList.fromJson(response.data);
+        return orderList;
+      } else {
+        print(response.data);
+      }
+}
+
 }

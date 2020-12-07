@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/UI/PatentList.dart';
+import 'package:plan_my_health/UI/UsersListScreen.dart';
 import 'package:plan_my_health/components/NavBarCustom.dart';
 
 class Home extends StatefulWidget {
@@ -15,7 +16,7 @@ class _HomeState extends State<Home> {
     int _selectedItem = 0;
   final Tab = [
    ParientList(),
-    Center(child: Text("Find Bet")),
+    UserListScreen(),
     Center(child: Text("Find Bet")),
    Center(child: Text("Find Bet")),
    Center(child: Text("Find Bet")),
