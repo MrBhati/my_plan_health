@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ParientList extends StatefulWidget {
   ParientList({Key key}) : super(key: key);
@@ -14,18 +17,20 @@ class _ParientListState extends State<ParientList> {
       body: SafeArea(
         child: Container(
             child: Column(children: [
-
-              Container(
-                width: MediaQuery.of(context).size.width,
-          color: Colors.green,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20,15,15),
-            child: Text("Welcome to My Plan Health",
-            style: TextStyle(fontSize: 20,
-            color: Colors.white,
-            fontWeight: FontWeight.w700),),
-          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            color: Colors.green,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 15, 15),
+              child: Text(
+                "Welcome to My Plan Health",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700),
               ),
+            ),
+          ),
           Container(
             child: Column(
               children: [
@@ -54,13 +59,9 @@ class _ParientListState extends State<ParientList> {
                       child: Text("Oncology"),
                     ),
                     SizedBox(width: 18),
-                      Container(
+                    Container(
                       child: Text("Neurology"),
                     ),
-                    SizedBox(width: 18),
-                    Container(
-                      child: Text("Urology"),
-                    )
                   ])),
                 ),
               ],
@@ -69,290 +70,8 @@ class _ParientListState extends State<ParientList> {
           Column(
             children: [
               ListTile(
-                tileColor: Color(0xFFDBF8D9),
-                onTap: () {
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => Chating()));
-                },
-                leading: Container(
-                    width: 54,
-                    height: 54,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: NetworkImage(
-                                "https://i1.wp.com/www.sardiniauniqueproperties.com/wp-content/uploads/2015/10/square-profile-pic-2.jpg")))),
-                title: Row(
-                  children: [
-                    Text(
-                      "Surendra Bhati",
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(width: 2),
-                    Text(
-                      " [ M ]",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Text(
-                    "Would you like to try a bet with me. Accept if yo",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "HelveticaNeueMedium",
-                        fontSize: 16),
-                  ),
-                ),
-                // trailing: Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                // Text("",
-                //     style: TextStyle(
-                //       color: Color(0XFF909090),
-                //       fontWeight: FontWeight.w500,
-                //       fontSize: 14,
-                //     )),
-                // SizedBox(height: 10),
-                // Container(
-                //     height: 20,
-                //     width: 20,
-                //     decoration: BoxDecoration(
-                //         color: Colors.green,
-                //         borderRadius: BorderRadius.all(Radius.circular(50))),
-                //     child: Align(
-                //         child:
-                //             Text("2", style: TextStyle(color: Colors.white)))),
-                //   ],
-                // ),
-              ),
-              ListTile(
-                tileColor: Color(0xFFDBF8D9),
-                onTap: () {
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => Chating()));
-                },
-                leading: Container(
-                    width: 54,
-                    height: 54,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: NetworkImage(
-                                "https://i1.wp.com/www.sardiniauniqueproperties.com/wp-content/uploads/2015/10/square-profile-pic-2.jpg")))),
-                title: Row(
-                  children: [
-                    Text(
-                      "Marut Jagarlamudi",
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(width: 2),
-                    Text(
-                      " [ M ]",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Text(
-                    "Would you like to try a bet with me. Accept if yo",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "HelveticaNeueMedium",
-                        fontSize: 16),
-                  ),
-                ),
-                // trailing: Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                // Text("",
-                //     style: TextStyle(
-                //       color: Color(0XFF909090),
-                //       fontWeight: FontWeight.w500,
-                //       fontSize: 14,
-                //     )),
-                // SizedBox(height: 10),
-                // Container(
-                //     height: 20,
-                //     width: 20,
-                //     decoration: BoxDecoration(
-                //         color: Colors.green,
-                //         borderRadius: BorderRadius.all(Radius.circular(50))),
-                //     child: Align(
-                //         child:
-                //             Text("2", style: TextStyle(color: Colors.white)))),
-                //   ],
-                // ),
-              ),
-              ListTile(
-                tileColor: Color(0xFFDBF8D9),
-                onTap: () {
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => Chating()));
-                },
-                leading: Container(
-                    width: 54,
-                    height: 54,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: NetworkImage(
-                                "https://i1.wp.com/www.sardiniauniqueproperties.com/wp-content/uploads/2015/10/square-profile-pic-2.jpg")))),
-                title: Row(
-                  children: [
-                    Text(
-                      "Moulik Prithu",
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(width: 2),
-                    Text(
-                      " [ M ]",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Text(
-                    "Would you like to try a bet with me. Accept if yo",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "HelveticaNeueMedium",
-                        fontSize: 16),
-                  ),
-                ),
-                // trailing: Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                // Text("",
-                //     style: TextStyle(
-                //       color: Color(0XFF909090),
-                //       fontWeight: FontWeight.w500,
-                //       fontSize: 14,
-                //     )),
-                // SizedBox(height: 10),
-                // Container(
-                //     height: 20,
-                //     width: 20,
-                //     decoration: BoxDecoration(
-                //         color: Colors.green,
-                //         borderRadius: BorderRadius.all(Radius.circular(50))),
-                //     child: Align(
-                //         child:
-                //             Text("2", style: TextStyle(color: Colors.white)))),
-                //   ],
-                // ),
-              ),
-              ListTile(
-                tileColor: Color(0xFFDBF8D9),
-                onTap: () {
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => Chating()));
-                },
-                leading: Container(
-                    width: 54,
-                    height: 54,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: NetworkImage(
-                                "https://i1.wp.com/www.sardiniauniqueproperties.com/wp-content/uploads/2015/10/square-profile-pic-2.jpg")))),
-                title: Row(
-                  children: [
-                    Text(
-                      "Rishikesh Mirchandani",
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    SizedBox(width: 2),
-                    Text(
-                      " [ M ]",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Text(
-                    "Would you like to try a bet with me. Accept if yo",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "HelveticaNeueMedium",
-                        fontSize: 16),
-                  ),
-                ),
-                // trailing: Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                // Text("",
-                //     style: TextStyle(
-                //       color: Color(0XFF909090),
-                //       fontWeight: FontWeight.w500,
-                //       fontSize: 14,
-                //     )),
-                // SizedBox(height: 10),
-                // Container(
-                //     height: 20,
-                //     width: 20,
-                //     decoration: BoxDecoration(
-                //         color: Colors.green,
-                //         borderRadius: BorderRadius.all(Radius.circular(50))),
-                //     child: Align(
-                //         child:
-                //             Text("2", style: TextStyle(color: Colors.white)))),
-                //   ],
-                // ),
-              ),
-              ListTile(
-                tileColor: Color(0xFFDBF8D9),
-                onTap: () {
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => Chating()));
-                },
+                tileColor: Colors.green.shade50,
+                onTap: () async => await launch(url("+91 7387563324")),
                 leading: Container(
                     width: 54,
                     height: 54,
@@ -371,57 +90,55 @@ class _ParientListState extends State<ParientList> {
                       ),
                     ),
                     SizedBox(width: 2),
-                    Text(
-                      " [ M ]",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
-                    ),
                   ],
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                   child: Text(
-                    "Would you like to try a bet with me. Accept if yo",
+                    "+91 9820891087",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     style: TextStyle(
                         color: Colors.black,
                         fontFamily: "HelveticaNeueMedium",
-                        fontSize: 16),
+                        fontSize: 14),
                   ),
                 ),
-                // trailing: Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                // Text("",
-                //     style: TextStyle(
-                //       color: Color(0XFF909090),
-                //       fontWeight: FontWeight.w500,
-                //       fontSize: 14,
-                //     )),
-                // SizedBox(height: 10),
-                // Container(
-                //     height: 20,
-                //     width: 20,
-                //     decoration: BoxDecoration(
-                //         color: Colors.green,
-                //         borderRadius: BorderRadius.all(Radius.circular(50))),
-                //     child: Align(
-                //         child:
-                //             Text("2", style: TextStyle(color: Colors.white)))),
-                //   ],
-                // ),
+                trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      " [ M ]",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 18,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                        child: Text("26 years",
+                            style: TextStyle(color: Colors.black))),
+                  ],
+                ),
               ),
             ],
           ),
         ])),
       ),
     );
+  }
+
+  String url(String phone) {
+    if (Platform.isAndroid) {
+      // add the [https]
+      return "https://wa.me/$phone/?text= "; // new line
+    } else {
+      // add the [https]
+      return "https://api.whatsapp.com/send?phone=$phone= "; // new line
+    }
   }
 }

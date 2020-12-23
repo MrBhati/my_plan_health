@@ -1,9 +1,9 @@
-class OrderList {
+class PatientList {
   List<Doctorlist> doctorlist;
 
-  OrderList({this.doctorlist});
+  PatientList({this.doctorlist});
 
-  OrderList.fromJson(Map<String, dynamic> json) {
+  PatientList.fromJson(Map<String, dynamic> json) {
     if (json['doctorlist'] != null) {
       doctorlist = new List<Doctorlist>();
       json['doctorlist'].forEach((v) {
@@ -23,38 +23,12 @@ class OrderList {
 
 class Doctorlist {
   String sId;
-  String userId;
-  int iV;
-  CreatedAt createdAt;
-  List<Doctors> doctors;
-  CreatedAt updatedAt;
   List<Userdata> userdata;
 
-  Doctorlist(
-      {this.sId,
-      this.userId,
-      this.iV,
-      this.createdAt,
-      this.doctors,
-      this.updatedAt,
-      this.userdata});
+  Doctorlist({this.sId, this.userdata});
 
   Doctorlist.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    userId = json['userId'];
-    iV = json['__v'];
-    createdAt = json['createdAt'] != null
-        ? new CreatedAt.fromJson(json['createdAt'])
-        : null;
-    if (json['doctors'] != null) {
-      doctors = new List<Doctors>();
-      json['doctors'].forEach((v) {
-        doctors.add(new Doctors.fromJson(v));
-      });
-    }
-    updatedAt = json['updatedAt'] != null
-        ? new CreatedAt.fromJson(json['updatedAt'])
-        : null;
     if (json['userdata'] != null) {
       userdata = new List<Userdata>();
       json['userdata'].forEach((v) {
@@ -66,107 +40,9 @@ class Doctorlist {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
-    data['userId'] = this.userId;
-    data['__v'] = this.iV;
-    if (this.createdAt != null) {
-      data['createdAt'] = this.createdAt.toJson();
-    }
-    if (this.doctors != null) {
-      data['doctors'] = this.doctors.map((v) => v.toJson()).toList();
-    }
-    if (this.updatedAt != null) {
-      data['updatedAt'] = this.updatedAt.toJson();
-    }
     if (this.userdata != null) {
       data['userdata'] = this.userdata.map((v) => v.toJson()).toList();
     }
-    return data;
-  }
-}
-
-class CreatedAt {
-  String date;
-
-  CreatedAt({this.date});
-
-  CreatedAt.fromJson(Map<String, dynamic> json) {
-    date = json['$date'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$date'] = this.date;
-    return data;
-  }
-}
-
-class Doctors {
-  Id iId;
-  String id;
-  String name;
-  String type;
-  CreatedAt bookedAt;
-  CreatedAt updatedAt;
-  CreatedAt createdAt;
-
-  Doctors(
-      {this.iId,
-      this.id,
-      this.name,
-      this.type,
-      this.bookedAt,
-      this.updatedAt,
-      this.createdAt});
-
-  Doctors.fromJson(Map<String, dynamic> json) {
-    iId = json['_id'] != null ? new Id.fromJson(json['_id']) : null;
-    id = json['id'];
-    name = json['name'];
-    type = json['type'];
-    bookedAt = json['bookedAt'] != null
-        ? new CreatedAt.fromJson(json['bookedAt'])
-        : null;
-    updatedAt = json['updatedAt'] != null
-        ? new CreatedAt.fromJson(json['updatedAt'])
-        : null;
-    createdAt = json['createdAt'] != null
-        ? new CreatedAt.fromJson(json['createdAt'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.iId != null) {
-      data['_id'] = this.iId.toJson();
-    }
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['type'] = this.type;
-    if (this.bookedAt != null) {
-      data['bookedAt'] = this.bookedAt.toJson();
-    }
-    if (this.updatedAt != null) {
-      data['updatedAt'] = this.updatedAt.toJson();
-    }
-    if (this.createdAt != null) {
-      data['createdAt'] = this.createdAt.toJson();
-    }
-    return data;
-  }
-}
-
-class Id {
-  String oid;
-
-  Id({this.oid});
-
-  Id.fromJson(Map<String, dynamic> json) {
-    oid = json['$oid'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$oid'] = this.oid;
     return data;
   }
 }
@@ -181,7 +57,7 @@ class Userdata {
   int age;
   int mobile;
   String password;
-  CreatedAt dateOfJoining;
+  DateOfJoining dateOfJoining;
   String employeeTag;
   int employeeId;
   String groupId;
@@ -222,7 +98,7 @@ class Userdata {
     mobile = json['mobile'];
     password = json['password'];
     dateOfJoining = json['dateOfJoining'] != null
-        ? new CreatedAt.fromJson(json['dateOfJoining'])
+        ? new DateOfJoining.fromJson(json['dateOfJoining'])
         : null;
     employeeTag = json['employeeTag'];
     employeeId = json['employeeId'];
@@ -256,6 +132,22 @@ class Userdata {
     data['renewalFlag'] = this.renewalFlag;
     data['activeFlag'] = this.activeFlag;
     data['activePlanId'] = this.activePlanId;
+    return data;
+  }
+}
+
+class DateOfJoining {
+  String date;
+
+  DateOfJoining({this.date});
+
+  DateOfJoining.fromJson(Map<String, dynamic> json) {
+    date = json['$date'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['$date'] = this.date;
     return data;
   }
 }

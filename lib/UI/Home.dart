@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/UI/PatentList.dart';
 import 'package:plan_my_health/UI/UsersListScreen.dart';
+import 'package:plan_my_health/UI/prescription.dart';
 import 'package:plan_my_health/components/NavBarCustom.dart';
 
 class Home extends StatefulWidget {
@@ -11,42 +12,35 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-
-    int _selectedItem = 0;
+  int _selectedItem = 0;
   final Tab = [
-   ParientList(),
+    ParientList(),
     UserListScreen(),
+    Prescription(),
     Center(child: Text("Find Bet")),
-   Center(child: Text("Find Bet")),
-   Center(child: Text("Find Bet")),
   ];
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-     
         bottomNavigationBar: NavBarCustom(
           iconList: [
             "assets/img/nav_icon/plus.png",
             "assets/img/nav_icon/search.png",
             "assets/img/nav_icon/ticket.png",
             "assets/img/nav_icon/message.png",
-
           ],
           iconList_feel: [
             "assets/img/nav_icon/plus_feel.png",
             "assets/img/nav_icon/search_feel.png",
             "assets/img/nav_icon/ticket_feel.png",
             "assets/img/nav_icon/message_feel.png",
-           
           ],
           iconTitle: [
             "Madical",
             "Search",
             "Booking",
             "Message",
-       
           ],
           onChange: (val) {
             setState(() {

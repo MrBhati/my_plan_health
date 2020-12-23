@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/UI/Splash.dart';
+import 'package:plan_my_health/UI/prescription.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,8 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: Splash(),
+      home: Prescription(),
     );
   }
 }
-
