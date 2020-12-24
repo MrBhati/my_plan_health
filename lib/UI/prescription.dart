@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:plan_my_health/Helpers/ApiHelper.dart';
 import 'package:plan_my_health/Helpers/Medicine.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:plan_my_health/model/Diagnosis.dart';
+import 'package:plan_my_health/model/Medicines.dart';
+import 'package:plan_my_health/model/Specialities.dart';
 
 class Prescription extends StatefulWidget {
   Prescription({Key key}) : super(key: key);
@@ -10,6 +14,57 @@ class Prescription extends StatefulWidget {
 }
 
 class _PrescriptionState extends State<Prescription> {
+  GlobalKey<AutoCompleteTextFieldState<Medicinelist>> key = new GlobalKey();
+  ApiHelper apiHelper = ApiHelper();
+  TextEditingController medicineSerchController;
+  List<Map<String, String>> dia = [];
+  List<Map<String, String>> spe = [];
+  List<Medicinelist> medicinelist = [];
+  String diagnosisSelected;
+  String specialitiesSelected;
+  var currentSelectedValue;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMedicines();
+    getDiagnosis();
+    getSpecialities();
+    medicineSerchController = TextEditingController();
+  }
+
+  void getSpecialities() {
+    apiHelper.getSpecialitieslist().then((value) {
+      print("get Diagnosis");
+      print(value[0].name);
+      for (Specialitieslist specialitieslist in value) {
+        spe.add({"name": specialitieslist.name, "sId": specialitieslist.sId});
+        print(specialitieslist.sId.toString());
+      }
+      setState(() {});
+    });
+  }
+
+  void getDiagnosis() {
+    apiHelper.getDiagnosislist().then((value) {
+      for (Diagnosislist diagnosislist in value) {
+        dia.add({
+          "diagnosisName": diagnosislist.diagnosisName,
+          "sId": diagnosislist.sId
+        });
+      }
+      setState(() {});
+    });
+  }
+
+  void getMedicines() {
+    apiHelper.getMedicinelist().then((value) {
+      setState(() {
+        medicinelist = value;
+      });
+    });
+  }
+
   @override
   Medicine userSave = Medicine();
   String dropdownValue;
@@ -72,45 +127,95 @@ class _PrescriptionState extends State<Prescription> {
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
+                              SizedBox(height: 8),
                               Container(
-                                margin:
-                                    const EdgeInsets.only(top: 5, bottom: 10),
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                height: 60,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Color(
-                                        0xFFDDDDDD), //                   <--- border color
-                                    width: 0.8,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0xFF0000000F),
-                                      blurRadius: 25.0, // soften the shadow
-                                      spreadRadius: 5.0, //extend the shadow
-                                      offset: Offset(
-                                        15.0, // Move to right 10  horizontally
-                                        15.0, // Move to bottom 10 Vertically
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                child: SimpleAutoCompleteTextField(
-                                  suggestions: [
-                                    "Malaria",
-                                    "Cold",
-                                    "Swine Flu",
-                                    "lurgy",
-                                  ],
+                                    // color: AppColors.EDITTEXT_BG_COLOR,
+                                    // border: Border.all(
+                                    //     color: AppColors.EDITTEXT_BORDER_COLOR,
+                                    //     width: 1.0),
+                                    borderRadius: BorderRadius.circular(4)),
+                                child: DropdownButtonFormField(
+                                  autovalidateMode: AutovalidateMode.disabled,
                                   decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.black12,
-                                      hintText: 'Suspected Disease'),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey, width: 1.0)),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.grey, width: 1.0),
+                                    ),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey, width: 1.0)),
+                                    labelText: "Suspected Disease",
+                                    hintText: "Select Suspected Disease",
+                                  ),
+                                  elevation: 2,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  value: diagnosisSelected,
+                                  onChanged: (value) {
+                                    setState(() {});
+                                    diagnosisSelected = value;
+                                  },
+                                  items: dia.map((type) {
+                                    return DropdownMenuItem(
+                                      value: type['sId'],
+                                      child: Text(
+                                        type['diagnosisName'],
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return "Select Country is required";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
+                              SizedBox(height: 12),
+                              // Container(
+                              //   margin:
+                              //       const EdgeInsets.only(top: 5, bottom: 10),
+                              //   padding:
+                              //       const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                              //   decoration: BoxDecoration(
+                              //     color: Colors.white,
+                              //     border: Border.all(
+                              //       color: Color(
+                              //           0xFFDDDDDD), //                   <--- border color
+                              //       width: 0.8,
+                              //     ),
+                              //     borderRadius:
+                              //         BorderRadius.all(Radius.circular(8)),
+                              //     boxShadow: [
+                              //       BoxShadow(
+                              //         color: Color(0xFF0000000F),
+                              //         blurRadius: 25.0, // soften the shadow
+                              //         spreadRadius: 5.0, //extend the shadow
+                              //         offset: Offset(
+                              //           15.0, // Move to right 10  horizontally
+                              //           15.0, // Move to bottom 10 Vertically
+                              //         ),
+                              //       )
+                              //     ],
+                              //   ),
+                              //   child: SimpleAutoCompleteTextField(
+                              //     suggestions: [
+                              //       "Malaria",
+                              //       "Cold",
+                              //       "Swine Flu",
+                              //       "lurgy",
+                              //     ],
+                              //     decoration: InputDecoration(
+                              //         filled: true,
+                              //         fillColor: Colors.black12,
+                              //         hintText: 'Suspected Disease'),
+                              //   ),
+                              // ),
 
                               Row(
                                 mainAxisAlignment:
@@ -123,7 +228,11 @@ class _PrescriptionState extends State<Prescription> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Icon(Icons.add, size: 30)
+                                  GestureDetector(
+                                      onTap: () {
+                                        addMedicines(context);
+                                      },
+                                      child: Icon(Icons.add, size: 30))
                                 ],
                               ),
                               Container(
@@ -230,7 +339,7 @@ class _PrescriptionState extends State<Prescription> {
                                           Row(
                                             children: [
                                               Icon(Icons.pages),
-                                              Text(" COMPLETE BLOOD CHECKUP",
+                                              Text(" COMPLETE BLOOD CHE",
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -324,6 +433,7 @@ class _PrescriptionState extends State<Prescription> {
                               //     )
                               //   ]),
                               // ),
+
                               Text(
                                 "Need to Hospitalise",
                                 style: TextStyle(
@@ -378,51 +488,61 @@ class _PrescriptionState extends State<Prescription> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 12),
                               Text(
-                                "Select Suspected Disease",
+                                "Select Specialities",
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
+                              SizedBox(height: 8),
                               Container(
-                                margin:
-                                    const EdgeInsets.only(top: 5, bottom: 10),
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                height: 50,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Color(
-                                        0xFFDDDDDD), //                   <--- border color
-                                    width: 0.8,
-                                  ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0xFF0000000F),
-                                      blurRadius: 25.0, // soften the shadow
-                                      spreadRadius: 5.0, //extend the shadow
-                                      offset: Offset(
-                                        15.0, // Move to right 10  horizontally
-                                        15.0, // Move to bottom 10 Vertically
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                child: SimpleAutoCompleteTextField(
-                                  suggestions: [
-                                    "Anesthesiology",
-                                    "Cardiology",
-                                    "Dermatology",
-                                    "Endocrinology",
-                                  ],
+                                    // color: AppColors.EDITTEXT_BG_COLOR,
+                                    // border: Border.all(
+                                    //     color: AppColors.EDITTEXT_BORDER_COLOR,
+                                    //     width: 1.0),
+                                    borderRadius: BorderRadius.circular(4)),
+                                child: DropdownButtonFormField(
+                                  autovalidateMode: AutovalidateMode.disabled,
                                   decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.black12,
-                                      hintText: 'specialitiest'),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey, width: 1.0)),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.grey, width: 1.0),
+                                    ),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey, width: 1.0)),
+                                    labelText: "Specialities",
+                                    hintText: "Select Specialities",
+                                  ),
+                                  elevation: 2,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  value: specialitiesSelected,
+                                  onChanged: (value) {
+                                    setState(() {});
+                                    specialitiesSelected = value;
+                                  },
+                                  items: spe.map((type) {
+                                    return DropdownMenuItem(
+                                      value: type['sId'],
+                                      child: Text(
+                                        type['name'],
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return "Select Country is required";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -588,5 +708,281 @@ class _PrescriptionState extends State<Prescription> {
             )),
       ),
     );
+  }
+
+  Widget medCard(Medicinelist medicinelist) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              medicinelist.drugName,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            Text(
+              medicinelist.composition,
+              style: TextStyle(fontSize: 12.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void addMedicines(context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        enableDrag: false,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            padding: const EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height - 100,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(16.0),
+                topRight: const Radius.circular(16.0),
+              ),
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      " Add Mediciens",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("close  "),
+                    )
+                  ],
+                ),
+                SizedBox(height: 20),
+                AutoCompleteTextField<Medicinelist>(
+                  key: key,
+                  controller: medicineSerchController,
+                  clearOnSubmit: false,
+                  suggestions: medicinelist,
+                  style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  decoration: InputDecoration(
+                    counterText: "",
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                    ),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                    labelText: "Search Medicines",
+
+                    hintText: "Search Medicines",
+
+                    // prefix: Icon(
+                    //   Icons.search,
+                    //   color: Colors.green,
+                    // ),
+                  ),
+                  itemFilter: (item, query) {
+                    return item.drugName
+                        .toLowerCase()
+                        .startsWith(query.toLowerCase());
+                  },
+                  itemSorter: (a, b) {
+                    return a.drugName.compareTo(b.drugName);
+                  },
+                  itemSubmitted: (item) {
+                    setState(() {
+                      medicineSerchController.text = item.drugName;
+                    });
+                  },
+                  itemBuilder: (context, item) {
+                    // ui for the autocompelete row
+                    return medCard(item);
+                  },
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      decoration: BoxDecoration(
+                          // color: AppColors.EDITTEXT_BG_COLOR,
+                          // border: Border.all(
+                          //     color: AppColors.EDITTEXT_BORDER_COLOR,
+                          //     width: 1.0),
+                          borderRadius: BorderRadius.circular(4)),
+                      child: DropdownButtonFormField(
+                        autovalidateMode: AutovalidateMode.disabled,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0)),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0)),
+                          labelText: "Taken Time",
+                          hintText: "Taken Time",
+                        ),
+                        elevation: 2,
+                        icon: Icon(Icons.arrow_drop_down),
+                        value: specialitiesSelected,
+                        onChanged: (value) {
+                          setState(() {});
+                          specialitiesSelected = value;
+                        },
+                        items: dia.map((type) {
+                          return DropdownMenuItem(
+                            value: type['sId'],
+                            child: Text(
+                              type['diagnosisName'],
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          );
+                        }).toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return "Taken Time is required";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width / 2 - 20,
+                      decoration: BoxDecoration(
+                          // color: AppColors.EDITTEXT_BG_COLOR,
+                          // border: Border.all(
+                          //     color: AppColors.EDITTEXT_BORDER_COLOR,
+                          //     width: 1.0),
+                          borderRadius: BorderRadius.circular(4)),
+                      child: DropdownButtonFormField(
+                        autovalidateMode: AutovalidateMode.disabled,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0)),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 1.0),
+                          ),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1.0)),
+                          labelText: "Taken Quantity ",
+                          hintText: "Taken Quantity",
+                        ),
+                        elevation: 2,
+                        icon: Icon(Icons.arrow_drop_down),
+                        value: specialitiesSelected,
+                        onChanged: (value) {
+                          setState(() {});
+                          specialitiesSelected = value;
+                        },
+                        items: dia.map((type) {
+                          return DropdownMenuItem(
+                            value: type['sId'],
+                            child: Text(
+                              type['diagnosisName'],
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          );
+                        }).toList(),
+                        validator: (value) {
+                          if (value == null) {
+                            return "Select Country is required";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      // color: AppColors.EDITTEXT_BG_COLOR,
+                      // border: Border.all(
+                      //     color: AppColors.EDITTEXT_BORDER_COLOR,
+                      //     width: 1.0),
+                      borderRadius: BorderRadius.circular(4)),
+                  child: DropdownButtonFormField(
+                    autovalidateMode: AutovalidateMode.disabled,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 1.0)),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 1.0)),
+                      labelText: "Taken With ",
+                      hintText: "Taken With",
+                    ),
+                    elevation: 2,
+                    icon: Icon(Icons.arrow_drop_down),
+                    value: specialitiesSelected,
+                    onChanged: (value) {
+                      setState(() {});
+                      specialitiesSelected = value;
+                    },
+                    items: dia.map((type) {
+                      return DropdownMenuItem(
+                        value: type['sId'],
+                        child: Text(
+                          type['diagnosisName'],
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return "Select Country is required";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Spacer(),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(6))),
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        "Add Medicien",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )));
   }
 }

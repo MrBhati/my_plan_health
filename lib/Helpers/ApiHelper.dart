@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/UI/Home.dart';
 import 'package:plan_my_health/UI/VerifyNumber.dart';
+import 'package:plan_my_health/model/Diagnosis.dart';
+import 'package:plan_my_health/model/Medicines.dart';
 import 'package:plan_my_health/model/PatientList.dart';
+import 'package:plan_my_health/model/Specialities.dart';
 
 class ApiHelper {
   String _baseUrlDev = "";
@@ -127,6 +131,42 @@ class ApiHelper {
     if (response.statusCode == 200) {
       PatientList orderList = PatientList.fromJson(response.data);
       return orderList;
+    } else {
+      print(response.data);
+    }
+  }
+
+  Future<List<Medicinelist>> getMedicinelist() async {
+    Response response = await dio.get("http://3.15.233.253:5000/medicines");
+
+    print("---------------------" + response.statusCode.toString());
+    if (response.statusCode == 200) {
+      Medicines medicine = Medicines.fromJson(response.data);
+      return medicine.medicinelist;
+    } else {
+      print(response.data);
+    }
+  }
+
+  Future<List<Diagnosislist>> getDiagnosislist() async {
+    Response response = await dio.get("http://3.15.233.253:5000/diagnosis");
+
+    print("---------------------" + response.statusCode.toString());
+    if (response.statusCode == 200) {
+      Diagnosis diagnosis = Diagnosis.fromJson(response.data);
+      return diagnosis.diagnosislist;
+    } else {
+      print(response.data);
+    }
+  }
+
+  Future<List<Specialitieslist>> getSpecialitieslist() async {
+    Response response = await dio.get("http://3.15.233.253:5000/specialities");
+
+    print("---------------------" + response.statusCode.toString());
+    if (response.statusCode == 200) {
+      Specialities specialities = Specialities.fromJson(response.data);
+      return specialities.specialitieslist;
     } else {
       print(response.data);
     }
