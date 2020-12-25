@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:plan_my_health/UI/PatientDetails.dart';
+import 'package:plan_my_health/model/Patient.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ParientList extends StatefulWidget {
@@ -71,7 +73,11 @@ class _ParientListState extends State<ParientList> {
             children: [
               ListTile(
                 tileColor: Colors.green.shade50,
-                onTap: () async => await launch(url("+91 7387563324")),
+                onTap: () {
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => PatientDetails(number: )));
+                },
+                //   onTap: () async => await launch(url("+91 7387563324")),
                 leading: Container(
                     width: 54,
                     height: 54,

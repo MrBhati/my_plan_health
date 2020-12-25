@@ -3,12 +3,19 @@ import 'package:plan_my_health/Helpers/ApiHelper.dart';
 import 'package:plan_my_health/Helpers/Medicine.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:plan_my_health/model/Diagnosis.dart';
+import 'package:plan_my_health/model/Diagnostics.dart';
 import 'package:plan_my_health/model/Medicines.dart';
 import 'package:plan_my_health/model/Specialities.dart';
+import 'package:plan_my_health/model/Wellness.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Prescription extends StatefulWidget {
-  Prescription({Key key}) : super(key: key);
+  Prescription({Key key, this.name, this.age, this.gender}) : super(key: key);
 
+  final String name;
+  final String age;
+
+  final String gender;
   @override
   _PrescriptionState createState() => _PrescriptionState();
 }
@@ -20,8 +27,13 @@ class _PrescriptionState extends State<Prescription> {
   List<Map<String, String>> dia = [];
   List<Map<String, String>> spe = [];
   List<Medicinelist> medicinelist = [];
+  String name, id, medid;
+  bool hospitalise;
+  List<Map<String, String>> selectMedicineList = [];
+  List<Map<String, String>> selectTestList = [];
+  List<String> selectWellnessList = [];
   String diagnosisSelected;
-  String specialitiesSelected;
+  String specialitiesSelected, timeSelected, quntitySelected, withSelected;
   var currentSelectedValue;
   @override
   void initState() {
@@ -30,6 +42,7 @@ class _PrescriptionState extends State<Prescription> {
     getMedicines();
     getDiagnosis();
     getSpecialities();
+    getShared();
     medicineSerchController = TextEditingController();
   }
 
@@ -54,6 +67,15 @@ class _PrescriptionState extends State<Prescription> {
         });
       }
       setState(() {});
+    });
+  }
+
+  void getShared() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("get img: " + prefs.getString('name').toString());
+    setState(() {
+      name = prefs.getString('name').toString();
+      id = prefs.getString('id').toString();
     });
   }
 
@@ -100,14 +122,18 @@ class _PrescriptionState extends State<Prescription> {
                       children: [
                         Row(children: [
                           Text(
-                            "Name: Surendra Bhati",
+                            "Name: " + widget.name,
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                         ]),
                         SizedBox(height: 5),
                         Row(children: [
-                          Text("Gender: M           Age: 32 years old"),
+                          Text("Gender: " +
+                              widget.gender +
+                              "           Age: " +
+                              widget.age +
+                              " years old"),
                         ]),
                       ],
                     ),
@@ -177,46 +203,6 @@ class _PrescriptionState extends State<Prescription> {
                                 ),
                               ),
                               SizedBox(height: 12),
-                              // Container(
-                              //   margin:
-                              //       const EdgeInsets.only(top: 5, bottom: 10),
-                              //   padding:
-                              //       const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                              //   decoration: BoxDecoration(
-                              //     color: Colors.white,
-                              //     border: Border.all(
-                              //       color: Color(
-                              //           0xFFDDDDDD), //                   <--- border color
-                              //       width: 0.8,
-                              //     ),
-                              //     borderRadius:
-                              //         BorderRadius.all(Radius.circular(8)),
-                              //     boxShadow: [
-                              //       BoxShadow(
-                              //         color: Color(0xFF0000000F),
-                              //         blurRadius: 25.0, // soften the shadow
-                              //         spreadRadius: 5.0, //extend the shadow
-                              //         offset: Offset(
-                              //           15.0, // Move to right 10  horizontally
-                              //           15.0, // Move to bottom 10 Vertically
-                              //         ),
-                              //       )
-                              //     ],
-                              //   ),
-                              //   child: SimpleAutoCompleteTextField(
-                              //     suggestions: [
-                              //       "Malaria",
-                              //       "Cold",
-                              //       "Swine Flu",
-                              //       "lurgy",
-                              //     ],
-                              //     decoration: InputDecoration(
-                              //         filled: true,
-                              //         fillColor: Colors.black12,
-                              //         hintText: 'Suspected Disease'),
-                              //   ),
-                              // ),
-
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -261,33 +247,49 @@ class _PrescriptionState extends State<Prescription> {
                                     )
                                   ],
                                 ),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                child: selectMedicineList.length != 0
+                                    ? Text("hello")
+                                    //:TODO show list off added medicens
+                                    // Column(
+                                    //     crossAxisAlignment:
+                                    //         CrossAxisAlignment.start,
+                                    //     children: [
+                                    //         Row(
+                                    //           mainAxisAlignment:
+                                    //               MainAxisAlignment
+                                    //                   .spaceBetween,
+                                    //           children: [
+                                    //             Text("Jean Siagra 50mg Tablet",
+                                    //                 style: TextStyle(
+                                    //                     fontWeight:
+                                    //                         FontWeight.bold,
+                                    //                     fontSize: 25)),
+                                    //             Icon(Icons.delete, size: 22)
+                                    //           ],
+                                    //         ),
+                                    //         SizedBox(height: 8),
+                                    //         Row(
+                                    //           children: [
+                                    //             Text(
+                                    //               "2 time in day, 1 tablet for 1 week",
+                                    //               style: TextStyle(
+                                    //                 fontSize: 18,
+                                    //               ),
+                                    //             )
+                                    //           ],
+                                    //         )
+                                    //       ])
+                                    : Row(
                                         children: [
-                                          Text("Jean Siagra 50mg Tablet",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 25)),
-                                          Icon(Icons.delete, size: 22)
+                                          Expanded(
+                                              child: Text(
+                                            " Not Selected",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16),
+                                          )),
                                         ],
                                       ),
-                                      SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "2 time in day, 1 tablet for 1 week",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ]),
                               ),
                               SizedBox(height: 10),
                               Row(
@@ -301,7 +303,11 @@ class _PrescriptionState extends State<Prescription> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Icon(Icons.add, size: 30)
+                                  GestureDetector(
+                                      onTap: () {
+                                        addTest(context);
+                                      },
+                                      child: Icon(Icons.add, size: 30))
                                 ],
                               ),
                               Container(
@@ -330,110 +336,75 @@ class _PrescriptionState extends State<Prescription> {
                                     )
                                   ],
                                 ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                child: selectTestList == null
+                                    ? Text("some test selected ...")
+                                    : Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.pages),
-                                              Text(" COMPLETE BLOOD CHE",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20)),
-                                            ],
-                                          ),
-                                          Icon(Icons.delete, size: 22)
-                                        ]),
-                                    SizedBox(height: 8),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.pages),
-                                              Text(" ROUTINE URINE ANALYSIS",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20)),
-                                            ],
-                                          ),
-                                          Icon(Icons.delete, size: 22)
-                                        ]),
-                                    SizedBox(height: 8),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.pages),
-                                              Text(" FASTING BLOOD SUGAR",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20)),
-                                            ],
-                                          ),
-                                          Icon(Icons.delete, size: 22)
-                                        ]),
-                                  ],
-                                ),
+                                          Expanded(
+                                              child: Text(
+                                            " Not Selected",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16),
+                                          )),
+                                        ],
+                                      ),
+
+                                // Column(
+                                //   children: [
+                                //     Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Row(
+                                //             children: [
+                                //               Icon(Icons.pages),
+                                //               Text(" COMPLETE BLOOD CHE",
+                                //                   style: TextStyle(
+                                //                       fontWeight:
+                                //                           FontWeight.bold,
+                                //                       fontSize: 20)),
+                                //             ],
+                                //           ),
+                                //           Icon(Icons.delete, size: 22)
+                                //         ]),
+                                //     SizedBox(height: 8),
+                                //     Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Row(
+                                //             children: [
+                                //               Icon(Icons.pages),
+                                //               Text(" ROUTINE URINE ANALYSIS",
+                                //                   style: TextStyle(
+                                //                       fontWeight:
+                                //                           FontWeight.bold,
+                                //                       fontSize: 20)),
+                                //             ],
+                                //           ),
+                                //           Icon(Icons.delete, size: 22)
+                                //         ]),
+                                //     SizedBox(height: 8),
+                                //     Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Row(
+                                //             children: [
+                                //               Icon(Icons.pages),
+                                //               Text(" FASTING BLOOD SUGAR",
+                                //                   style: TextStyle(
+                                //                       fontWeight:
+                                //                           FontWeight.bold,
+                                //                       fontSize: 20)),
+                                //             ],
+                                //           ),
+                                //           Icon(Icons.delete, size: 22)
+                                //         ]),
+                                //   ],
+                                // ),
                               ),
-
-                              // Container(
-                              //   color: Colors.white,
-                              //   child: Column(children: [
-                              //     Row(
-                              //       children: [
-                              //         Column(
-                              //           children: [
-                              //             Text(
-                              //               "Taken Time",
-                              //               style: TextStyle(fontSize: 10),
-                              //             ),
-                              //             DropdownButton<String>(
-                              //               value: dropdownValue,
-                              //               icon: Icon(Icons.arrow_downward),
-                              //               iconSize: 24,
-                              //               elevation: 16,
-                              //               style: TextStyle(
-                              //                   color: Colors.deepPurple),
-                              //               underline: Container(
-                              //                 height: 2,
-                              //                 color: Colors.deepPurpleAccent,
-                              //               ),
-                              //               onChanged: (String newValue) {
-                              //                 setState(() {
-                              //                   print(newValue);
-                              //                   dropdownValue = newValue;
-                              //                 });
-                              //               },
-                              //               items: <String>[
-                              //                 'One',
-                              //                 'Two',
-                              //                 'Free',
-                              //                 'Four'
-                              //               ].map<DropdownMenuItem<String>>(
-                              //                   (String value) {
-                              //                 return DropdownMenuItem<String>(
-                              //                   value: value,
-                              //                   child: Text(value),
-                              //                 );
-                              //               }).toList(),
-                              //             ),
-                              //           ],
-                              //         )
-                              //       ],
-                              //     )
-                              //   ]),
-                              // ),
-
                               Text(
                                 "Need to Hospitalise",
                                 style: TextStyle(
@@ -446,7 +417,9 @@ class _PrescriptionState extends State<Prescription> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      hospitalise = false;
+                                    },
                                     child: Container(
                                       decoration: BoxDecoration(
                                           color: Colors.grey,
@@ -467,7 +440,9 @@ class _PrescriptionState extends State<Prescription> {
                                   ),
                                   SizedBox(width: 100),
                                   GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      hospitalise = true;
+                                    },
                                     child: Container(
                                       decoration: BoxDecoration(
                                           color: Colors.green,
@@ -498,12 +473,8 @@ class _PrescriptionState extends State<Prescription> {
                               ),
                               SizedBox(height: 8),
                               Container(
-                                height: 50,
+                                height: 60,
                                 decoration: BoxDecoration(
-                                    // color: AppColors.EDITTEXT_BG_COLOR,
-                                    // border: Border.all(
-                                    //     color: AppColors.EDITTEXT_BORDER_COLOR,
-                                    //     width: 1.0),
                                     borderRadius: BorderRadius.circular(4)),
                                 child: DropdownButtonFormField(
                                   autovalidateMode: AutovalidateMode.disabled,
@@ -545,7 +516,7 @@ class _PrescriptionState extends State<Prescription> {
                                   },
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 15),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -557,9 +528,14 @@ class _PrescriptionState extends State<Prescription> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Icon(Icons.add, size: 30)
+                                  GestureDetector(
+                                      onTap: () {
+                                        addWellness(context);
+                                      },
+                                      child: Icon(Icons.add, size: 30))
                                 ],
                               ),
+                              SizedBox(height: 8),
                               Container(
                                 margin:
                                     const EdgeInsets.only(top: 5, bottom: 10),
@@ -586,62 +562,76 @@ class _PrescriptionState extends State<Prescription> {
                                     )
                                   ],
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                child: Wellnesslist == null
+                                    ? Text("some test selected ...")
+                                    : Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.pages),
-                                              Text(" Exercise",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20)),
-                                            ],
-                                          ),
-                                          Icon(Icons.delete, size: 22)
-                                        ]),
-                                    SizedBox(height: 8),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.pages),
-                                              Text(" Sleep Properly",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20)),
-                                            ],
-                                          ),
-                                          Icon(Icons.delete, size: 22)
-                                        ]),
-                                    SizedBox(height: 8),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.pages),
-                                              Text(" Drink More water",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20)),
-                                            ],
-                                          ),
-                                          Icon(Icons.delete, size: 22)
-                                        ]),
-                                    SizedBox(height: 10),
-                                  ],
-                                ),
+                                          Expanded(
+                                              child: Text(
+                                            " Not Selected",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16),
+                                          )),
+                                        ],
+                                      ),
+
+                                // Column(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Row(
+                                //             children: [
+                                //               Icon(Icons.pages),
+                                //               Text(" Exercise",
+                                //                   style: TextStyle(
+                                //                       fontWeight:
+                                //                           FontWeight.bold,
+                                //                       fontSize: 20)),
+                                //             ],
+                                //           ),
+                                //           Icon(Icons.delete, size: 22)
+                                //         ]),
+                                //     SizedBox(height: 8),
+                                //     Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Row(
+                                //             children: [
+                                //               Icon(Icons.pages),
+                                //               Text(" Sleep Properly",
+                                //                   style: TextStyle(
+                                //                       fontWeight:
+                                //                           FontWeight.bold,
+                                //                       fontSize: 20)),
+                                //             ],
+                                //           ),
+                                //           Icon(Icons.delete, size: 22)
+                                //         ]),
+                                //     SizedBox(height: 8),
+                                //     Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Row(
+                                //             children: [
+                                //               Icon(Icons.pages),
+                                //               Text(" Drink More water",
+                                //                   style: TextStyle(
+                                //                       fontWeight:
+                                //                           FontWeight.bold,
+                                //                       fontSize: 20)),
+                                //             ],
+                                //           ),
+                                //           Icon(Icons.delete, size: 22)
+                                //         ]),
+                                //     SizedBox(height: 10),
+                                //   ],
+                                // ),
                               ),
                               Text(
                                 "Remark",
@@ -650,39 +640,51 @@ class _PrescriptionState extends State<Prescription> {
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 5, bottom: 10),
+                              SizedBox(height: 10),
+                              TextFormField(
+                                  decoration: InputDecoration(
+                                fillColor: Color(0xFFEBEBEB),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey, width: 1.0)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFFEBEBEB), width: 1.0),
+                                ),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFFEBEBEB), width: 1.0)),
+                                labelText: "Write Remark",
+                                hintText: 'Type here...',
+                                hintStyle: TextStyle(
+                                    letterSpacing: 0.4,
+                                    fontFamily: "HelveticaNeueMedium",
+                                    fontSize: 14,
+                                    color: Colors.grey),
+                                suffixIcon: Container(
                                   padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Color(
-                                          0xFFDDDDDD), //                   <--- border color
-                                      width: 0.8,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0xFF0000000F),
-                                        blurRadius: 25.0, // soften the shadow
-                                        spreadRadius: 5.0, //extend the shadow
-                                        offset: Offset(
-                                          15.0, // Move to right 10  horizontally
-                                          15.0, // Move to bottom 10 Vertically
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                        hintText: 'Write Rematk'),
-                                  )),
+                                      const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                                ),
+                              )),
                               SizedBox(height: 20),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  apiHelper.sendPrescription(
+                                      "1",
+                                      widget.name,
+                                      widget.gender,
+                                      widget.age,
+                                      814,
+                                      "abc123",
+                                      id,
+                                      name,
+                                      selectMedicineList.toString(),
+                                      selectTestList.toString(),
+                                      hospitalise,
+                                      specialitiesSelected,
+                                      selectWellnessList.toString(),
+                                      "all is well");
+                                },
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: Colors.green,
@@ -734,6 +736,211 @@ class _PrescriptionState extends State<Prescription> {
     );
   }
 
+  void addWellness(context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        enableDrag: false,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            padding: const EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height - 100,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(16.0),
+                topRight: const Radius.circular(16.0),
+              ),
+            ),
+            child: Column(children: [
+              SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "   Select Wellness Tips",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("close    "),
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              Container(
+                height: MediaQuery.of(context).size.height - 200,
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    FutureBuilder<List<Wellnesslist>>(
+                      future: apiHelper.getWellnesslist(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Wellnesslist> data = snapshot.data;
+                          return wellnessList(data);
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return Center(
+                          child: Container(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator()),
+                        );
+                      },
+                    ),
+                  ],
+                )),
+              )
+            ])));
+  }
+
+  ListView wellnessList(data) {
+    print("---------------------");
+    print(data.length);
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        controller: ScrollController(),
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return wellnessTile(data, index);
+        });
+  }
+
+  ListTile wellnessTile(dynamic wellnesslist, int index) => ListTile(
+      onTap: () {
+        selectWellnessList.add(wellnesslist[index].wellnessname);
+
+        print(selectWellnessList.toString());
+      },
+      title: Container(
+        padding: const EdgeInsets.fromLTRB(8, 9, 8, 9),
+        decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            border: Border.all(color: Color(0xFFDDDDDD))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              wellnesslist[index].wellnessname,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+            // SizedBox(height: 5),
+            // Text(wellnesslist[index].bloodQuantityRequired,
+            //     style: TextStyle(fontSize: 12))
+          ],
+        ),
+      ));
+
+  void addTest(context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        enableDrag: false,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            padding: const EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height - 100,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(16.0),
+                topRight: const Radius.circular(16.0),
+              ),
+            ),
+            child: Column(children: [
+              SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "   Select Test",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("close    "),
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              Container(
+                height: MediaQuery.of(context).size.height - 200,
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    FutureBuilder<List<Diagnosticslist>>(
+                      future: apiHelper.getDiagnosticslist(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Diagnosticslist> data = snapshot.data;
+                          return diagnosticslistView(data);
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return Center(
+                          child: Container(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator()),
+                        );
+                      },
+                    ),
+                  ],
+                )),
+              )
+            ])));
+  }
+
+  ListView diagnosticslistView(data) {
+    print("---------------------");
+    print(data.length);
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        controller: ScrollController(),
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return diagnosticslisTtile(data, index);
+        });
+  }
+
+  ListTile diagnosticslisTtile(dynamic diagnosticslist, int index) => ListTile(
+      onTap: () {
+        selectTestList.add({
+          "id": diagnosticslist[index].sId,
+          "name": diagnosticslist[index].name
+        });
+        print(selectTestList.toString());
+      },
+      title: Container(
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+        decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            border: Border.all(color: Color(0xFFDDDDDD))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              diagnosticslist[index].name,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(height: 5),
+            Text(diagnosticslist[index].bloodQuantityRequired,
+                style: TextStyle(fontSize: 12))
+          ],
+        ),
+      ));
   void addMedicines(context) {
     showModalBottomSheet(
         context: context,
@@ -805,6 +1012,7 @@ class _PrescriptionState extends State<Prescription> {
                   itemSubmitted: (item) {
                     setState(() {
                       medicineSerchController.text = item.drugName;
+                      medid = item.sId;
                     });
                   },
                   itemBuilder: (context, item) {
@@ -817,7 +1025,7 @@ class _PrescriptionState extends State<Prescription> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      height: 50,
+                      height: 60,
                       width: MediaQuery.of(context).size.width / 2 - 20,
                       decoration: BoxDecoration(
                           // color: AppColors.EDITTEXT_BG_COLOR,
@@ -843,18 +1051,21 @@ class _PrescriptionState extends State<Prescription> {
                         ),
                         elevation: 2,
                         icon: Icon(Icons.arrow_drop_down),
-                        value: specialitiesSelected,
+                        value: timeSelected,
                         onChanged: (value) {
                           setState(() {});
-                          specialitiesSelected = value;
+                          timeSelected = value;
                         },
-                        items: dia.map((type) {
-                          return DropdownMenuItem(
-                            value: type['sId'],
-                            child: Text(
-                              type['diagnosisName'],
-                              style: TextStyle(color: Colors.black),
-                            ),
+                        items: <String>[
+                          'One time in a day',
+                          'Two  time in a day',
+                          'Three time in a day',
+                          'Four time in a day'
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value,
+                                style: TextStyle(color: Colors.black)),
                           );
                         }).toList(),
                         validator: (value) {
@@ -866,14 +1077,10 @@ class _PrescriptionState extends State<Prescription> {
                       ),
                     ),
                     Container(
-                      height: 50,
+                      height: 60,
                       width: MediaQuery.of(context).size.width / 2 - 20,
-                      decoration: BoxDecoration(
-                          // color: AppColors.EDITTEXT_BG_COLOR,
-                          // border: Border.all(
-                          //     color: AppColors.EDITTEXT_BORDER_COLOR,
-                          //     width: 1.0),
-                          borderRadius: BorderRadius.circular(4)),
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(4)),
                       child: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.disabled,
                         decoration: InputDecoration(
@@ -892,23 +1099,22 @@ class _PrescriptionState extends State<Prescription> {
                         ),
                         elevation: 2,
                         icon: Icon(Icons.arrow_drop_down),
-                        value: specialitiesSelected,
+                        value: quntitySelected,
                         onChanged: (value) {
                           setState(() {});
-                          specialitiesSelected = value;
+                          quntitySelected = value;
                         },
-                        items: dia.map((type) {
-                          return DropdownMenuItem(
-                            value: type['sId'],
-                            child: Text(
-                              type['diagnosisName'],
-                              style: TextStyle(color: Colors.black),
-                            ),
+                        items: <String>['Half', 'One', 'Two']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value,
+                                style: TextStyle(color: Colors.black)),
                           );
                         }).toList(),
                         validator: (value) {
                           if (value == null) {
-                            return "Select Country is required";
+                            return "Taken Quantity is required";
                           }
                           return null;
                         },
@@ -918,13 +1124,9 @@ class _PrescriptionState extends State<Prescription> {
                 ),
                 SizedBox(height: 20),
                 Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                      // color: AppColors.EDITTEXT_BG_COLOR,
-                      // border: Border.all(
-                      //     color: AppColors.EDITTEXT_BORDER_COLOR,
-                      //     width: 1.0),
-                      borderRadius: BorderRadius.circular(4)),
+                  height: 60,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(4)),
                   child: DropdownButtonFormField(
                     autovalidateMode: AutovalidateMode.disabled,
                     decoration: InputDecoration(
@@ -942,23 +1144,22 @@ class _PrescriptionState extends State<Prescription> {
                     ),
                     elevation: 2,
                     icon: Icon(Icons.arrow_drop_down),
-                    value: specialitiesSelected,
+                    value: withSelected,
                     onChanged: (value) {
                       setState(() {});
-                      specialitiesSelected = value;
+                      withSelected = value;
                     },
-                    items: dia.map((type) {
-                      return DropdownMenuItem(
-                        value: type['sId'],
-                        child: Text(
-                          type['diagnosisName'],
-                          style: TextStyle(color: Colors.black),
-                        ),
+                    items: <String>['water', 'Millk']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child:
+                            Text(value, style: TextStyle(color: Colors.black)),
                       );
                     }).toList(),
                     validator: (value) {
                       if (value == null) {
-                        return "Select Country is required";
+                        return "Taken With is required";
                       }
                       return null;
                     },
@@ -966,7 +1167,23 @@ class _PrescriptionState extends State<Prescription> {
                 ),
                 Spacer(),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    print("medicens Name: " +
+                        medicineSerchController.text.toString());
+                    print("time: " + timeSelected.toString());
+                    print("qut: " + quntitySelected.toString());
+                    print("with: " + withSelected.toString());
+
+                    selectMedicineList.add({
+                      "id": medid,
+                      "name": medicineSerchController.text,
+                      "time": timeSelected,
+                      "qut": quntitySelected,
+                      "with": withSelected
+                    });
+                    setState(() {});
+                    print(selectMedicineList.toString());
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.green,

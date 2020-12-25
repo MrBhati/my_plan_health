@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/Helpers/ApiHelper.dart';
+import 'package:plan_my_health/UI/PatientDetails.dart';
 import 'package:plan_my_health/UI/prescription.dart';
 import 'package:plan_my_health/model/PatientList.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -142,7 +143,14 @@ class _UserListScreenState extends State<UserListScreen>
 
   ListTile _tile(dynamic user) => ListTile(
         tileColor: Colors.green.shade50,
-        onTap: () async => await launch(url("+91 " + user.mobile.toString())),
+        // onTap: () async => await launch(url("+91 " + user.mobile.toString())),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      PatientDetails(number: user.mobile.toString())));
+        },
         leading: Container(
             width: 54,
             height: 54,
