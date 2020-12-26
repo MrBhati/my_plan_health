@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/UI/Home.dart';
@@ -195,6 +196,15 @@ class ApiHelper {
     }
   }
 
+  // ignore: non_constant_identifier_names
+  Future<FormData> FormData2() async {
+    var formData = FormData();
+    formData.fields
+      ..add(MapEntry("doctorid", "5fc7d1b6999df38f1bc95368"))
+      ..add(MapEntry("doctorname", "abc"));
+    return formData;
+  }
+
   Future<LoginData> sendPrescription(
       String id,
       String name,
@@ -215,67 +225,102 @@ class ApiHelper {
 
 //Instance level
 
-      var requestBody = {
+      FormData formData123 = FormData.fromMap({
+        "doctorid": drid,
+        "doctorname": drname,
+        "medicine": selectMedicineList.toString(),
+        "test": selectTestList.toString(),
+        "hospitalised": hospitalise.toString(),
+        "specialist": specialitiesSelected.toString(),
+        "wellness": selectWellnessList.toString(),
+        "remark": remark
+      });
+      var formData2 = await FormData2();
+      Map<String, String> body = {
         "id": id,
         "name": name,
         "gender": gender,
         "age": age,
-        "mobile": number,
+        "mobile": number.toString(),
         "password": pass,
         "doctorid": drid,
         "doctorname": drname,
         "medicine": selectMedicineList,
         "test": selectTestList,
-        "hospitalised": hospitalise,
+        "hospitalised": hospitalise.toString(),
         "specialist": specialitiesSelected,
         "wellness": selectWellnessList,
         "remark": remark
       };
+      // var requestBody = {
+      //   "id": id,
+      //   "name": name,
+      //   "gender": gender,
+      //   "age": age,
+      //   "mobile": number,
+      //   "password": pass,
+      //   "doctorid": drid,
+      //   "doctorname": drname,
+      //   "medicine": selectMedicineList,
+      //   "test": selectTestList,
+      //   "hospitalised": hospitalise,
+      //   "specialist": specialitiesSelected,
+      //   "wellness": selectWellnessList,
+      //   "remark": remark
+      // };
 //or works once
-      Response response =
-          await dio.post("http://3.15.233.253:5000/doctors/preceptionupdate",
-              data: {
-                "doctorid": "5fc7d1b6999df38f1bc95367",
-                "doctorname": "Dr Smit thakker",
-                "medicine": "aa",
-                "test": "ssa",
-                "hospitalised": "no",
-                "specialist": "weqweqw",
-                "wellness": "dasdad",
-                "remark": "asdasd"
+      //--------------------------------
 
-                // "id": id,
-                // "name": name,
-                // "gender": gender,
-                // "age": age,
-                // "mobile": number,
-                // "password": pass,
-                // "doctorid": "5fc7d1b6999df38f1bc95367",
-                // "doctorname": "Dr Smit thakker",
-                // "medicine": selectMedicineList,
-                // "test": selectTestList,
-                // "hospitalised": hospitalise,
-                // "specialist": specialitiesSelected,
-                // "wellness": selectWellnessList,
-                // "remark": remark
+      print(body);
+      Response response = await dio.post(
+        "http://3.15.233.253:5000/doctors/preceptionupdate",
+        data: formData123,
+      );
 
-                // "doctorid": "5fc7d1b6999df38f1bc95367",
-                // "doctorname": drname,
-                // "medicinename": selectWellnessList.toString(),
-                // "medicineid": "321",
-                // "consultionrequired": selectWellnessList,
-                // "diagnosticsname": "123123",
-                // "diagnosticsid": "123123",
-                // "treatmentname": "12312",
-                // "treatmentid": "12313",
-                // "userid": "12312"
-              },
-              options: Options(
-                headers: {
-                  "Accept": "application/json",
-                  "Content-Type": "application/x-www-form-urlencoded"
-                },
-              ));
+      // await dio.post("http://3.15.233.253:5000/doctors/preceptionupdate",
+      //     data: {
+      //       "doctorid": "5fc7d1b6999df38f1bc95367",
+      //       "doctorname": "Dr Smit thakker",
+      //       "medicine": "aa",
+      //       "test": "ssa",
+      //       "hospitalised": "no",
+      //       "specialist": "weqweqw",
+      //       "wellness": "dasdad",
+      //       "remark": "asdasd"
+//-------------------------------------------------------
+      // "id": id,
+      // "name": name,
+      // "gender": gender,
+      // "age": age,
+      // "mobile": number,
+      // "password": pass,
+      // "doctorid": "5fc7d1b6999df38f1bc95367",
+      // "doctorname": "Dr Smit thakker",
+      // "medicine": selectMedicineList,
+      // "test": selectTestList,
+      // "hospitalised": hospitalise,
+      // "specialist": specialitiesSelected,
+      // "wellness": selectWellnessList,
+      // "remark": remark
+
+      // "doctorid": "5fc7d1b6999df38f1bc95367",
+      // "doctorname": drname,
+      // "medicinename": selectWellnessList.toString(),
+      // "medicineid": "321",
+      // "consultionrequired": selectWellnessList,
+      // "diagnosticsname": "123123",
+      // "diagnosticsid": "123123",
+      // "treatmentname": "12312",
+      // "treatmentid": "12313",
+      // "userid": "12312"
+      //--------------------------------
+      // },
+      // options: Options(
+      //   headers: {
+      //     "Accept": "application/json",
+      //     "Content-Type": "application/x-www-form-urlencoded"
+      //   },
+      // ));
       print(response.statusMessage);
       print(response.statusCode);
       print(response);

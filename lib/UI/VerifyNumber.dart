@@ -240,7 +240,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                         print(otp);
                         apiHelper.verifyNumber(context, otp).then((value) {
                           if (value != null) {
-                            saveId(value.data.id.toString(),
+                            saveId(value.data.sId.toString(),
                                     value.data.name.toString())
                                 .then((value) {
                               Navigator.push(
@@ -327,6 +327,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
   Future saveId(String id, String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print("Save Name And ID");
+    print(id);
     prefs.setString('id', id);
     prefs.setString('name', name);
   }
