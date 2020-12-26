@@ -64,7 +64,8 @@ class _PatientDetailsState extends State<PatientDetails>
                         builder: (context) => Prescription(
                             name: patient.name,
                             age: patient.age.toString(),
-                            gender: patient.gender)));
+                            gender: patient.gender,
+                            pid: patient.sId)));
               },
             ),
           ],

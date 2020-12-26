@@ -10,11 +10,12 @@ import 'package:plan_my_health/model/Wellness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Prescription extends StatefulWidget {
-  Prescription({Key key, this.name, this.age, this.gender}) : super(key: key);
+  Prescription({Key key, this.name, this.age, this.gender, this.pid})
+      : super(key: key);
 
   final String name;
   final String age;
-
+  final String pid;
   final String gender;
   @override
   _PrescriptionState createState() => _PrescriptionState();
@@ -31,7 +32,7 @@ class _PrescriptionState extends State<Prescription> {
   bool hospitalise;
   List<Map<String, String>> selectMedicineList = [];
   List<Map<String, String>> selectTestList = [];
-  List<String> selectWellnessList = [];
+  List<Map<String, String>> selectWellnessList = [];
   String diagnosisSelected;
   String specialitiesSelected, timeSelected, quntitySelected, withSelected;
   var currentSelectedValue;
@@ -51,7 +52,10 @@ class _PrescriptionState extends State<Prescription> {
       print("get Diagnosis");
       print(value[0].name);
       for (Specialitieslist specialitieslist in value) {
-        spe.add({"name": specialitieslist.name, "sId": specialitieslist.sId});
+        spe.add({
+          "name": specialitieslist.name.toString(),
+          "sId": specialitieslist.sId.toString()
+        });
         print(specialitieslist.sId.toString());
       }
       setState(() {});
@@ -62,8 +66,8 @@ class _PrescriptionState extends State<Prescription> {
     apiHelper.getDiagnosislist().then((value) {
       for (Diagnosislist diagnosislist in value) {
         dia.add({
-          "diagnosisName": diagnosislist.diagnosisName,
-          "sId": diagnosislist.sId
+          "diagnosisName": diagnosislist.diagnosisName.toString(),
+          "sId": diagnosislist.sId.toString()
         });
       }
       setState(() {});
@@ -498,7 +502,7 @@ class _PrescriptionState extends State<Prescription> {
                                   },
                                   items: spe.map((type) {
                                     return DropdownMenuItem(
-                                      value: type['sId'],
+                                      value: type['name'],
                                       child: Text(
                                         type['name'],
                                         style: TextStyle(color: Colors.black),
@@ -591,7 +595,8 @@ class _PrescriptionState extends State<Prescription> {
                                                               Icon(Icons.pages),
                                                               Text(
                                                                   selectWellnessList[
-                                                                      index],
+                                                                          index]
+                                                                      ["name"],
                                                                   style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
@@ -644,7 +649,7 @@ class _PrescriptionState extends State<Prescription> {
                               GestureDetector(
                                 onTap: () {
                                   apiHelper.sendPrescription(
-                                      "1",
+                                      widget.pid,
                                       widget.name,
                                       widget.gender,
                                       widget.age,
@@ -788,7 +793,10 @@ class _PrescriptionState extends State<Prescription> {
 
   ListTile wellnessTile(dynamic wellnesslist, int index) => ListTile(
       onTap: () {
-        selectWellnessList.add(wellnesslist[index].wellnessname);
+        selectWellnessList.add({
+          "id": wellnesslist[index].sId.toString(),
+          "name": wellnesslist[index].wellnessname.toString()
+        });
         setState(() {});
         print(selectWellnessList.toString());
         Navigator.of(context).pop();
@@ -889,8 +897,8 @@ class _PrescriptionState extends State<Prescription> {
   ListTile diagnosticslisTtile(dynamic diagnosticslist, int index) => ListTile(
       onTap: () {
         selectTestList.add({
-          "id": diagnosticslist[index].sId,
-          "name": diagnosticslist[index].name
+          "id": diagnosticslist[index].sId.toString(),
+          "name": diagnosticslist[index].name.toString()
         });
         setState(() {});
         print(selectTestList.toString());
@@ -1149,11 +1157,11 @@ class _PrescriptionState extends State<Prescription> {
                     print("with: " + withSelected.toString());
 
                     selectMedicineList.add({
-                      "id": medid,
-                      "name": medicineSerchController.text,
-                      "time": timeSelected,
-                      "qut": quntitySelected,
-                      "with": withSelected
+                      "id": medid.toString(),
+                      "name": medicineSerchController.text.toString(),
+                      "time": timeSelected.toString(),
+                      "qut": "quntitySelected.toString()",
+                      "with": "withSelected.toString()"
                     });
                     setState(() {});
                     print(selectMedicineList.toString());

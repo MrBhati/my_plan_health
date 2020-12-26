@@ -233,7 +233,8 @@ class ApiHelper {
         "hospitalised": hospitalise.toString(),
         "specialist": specialitiesSelected.toString(),
         "wellness": selectWellnessList.toString(),
-        "remark": remark
+        "remark": remark.toString(),
+        "userid": id.toString()
       });
       var formData2 = await FormData2();
       Map<String, String> body = {

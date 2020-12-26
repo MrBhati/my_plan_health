@@ -240,7 +240,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                         print(otp);
                         apiHelper.verifyNumber(context, otp).then((value) {
                           if (value != null) {
-                            saveId(value.data.sId.toString(),
+                            saveId(value.data.toString(),
                                     value.data.name.toString())
                                 .then((value) {
                               Navigator.push(
