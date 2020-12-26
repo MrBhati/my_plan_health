@@ -216,35 +216,59 @@ class ApiHelper {
 //Instance level
 
       var requestBody = {
-        'id': id,
-        'name': name,
-        'gender': gender,
-        'age': age,
-        'mobile': number,
-        'password': pass,
-        'doctorid': drid,
-        'doctorname': drname,
-        'medicine': selectMedicineList,
-        'test': selectTestList,
-        'hospitalised': hospitalise,
-        'specialist': specialitiesSelected,
-        'wellness': selectWellnessList,
-        'remark': remark
+        "id": id,
+        "name": name,
+        "gender": gender,
+        "age": age,
+        "mobile": number,
+        "password": pass,
+        "doctorid": drid,
+        "doctorname": drname,
+        "medicine": selectMedicineList,
+        "test": selectTestList,
+        "hospitalised": hospitalise,
+        "specialist": specialitiesSelected,
+        "wellness": selectWellnessList,
+        "remark": remark
       };
 //or works once
       Response response =
           await dio.post("http://3.15.233.253:5000/doctors/preceptionupdate",
               data: {
                 "doctorid": "5fc7d1b6999df38f1bc95367",
-                "doctorname": drname,
-                "medicinename": selectWellnessList.toString(),
-                "medicineid": "321",
-                "consultionrequired": selectWellnessList,
-                "diagnosticsname": "123123",
-                "diagnosticsid": "123123",
-                "treatmentname": "12312",
-                "treatmentid": "12313",
-                "userid": "12312"
+                "doctorname": "Dr Smit thakker",
+                "medicine": "aa",
+                "test": "ssa",
+                "hospitalised": "no",
+                "specialist": "weqweqw",
+                "wellness": "dasdad",
+                "remark": "asdasd"
+
+                // "id": id,
+                // "name": name,
+                // "gender": gender,
+                // "age": age,
+                // "mobile": number,
+                // "password": pass,
+                // "doctorid": "5fc7d1b6999df38f1bc95367",
+                // "doctorname": "Dr Smit thakker",
+                // "medicine": selectMedicineList,
+                // "test": selectTestList,
+                // "hospitalised": hospitalise,
+                // "specialist": specialitiesSelected,
+                // "wellness": selectWellnessList,
+                // "remark": remark
+
+                // "doctorid": "5fc7d1b6999df38f1bc95367",
+                // "doctorname": drname,
+                // "medicinename": selectWellnessList.toString(),
+                // "medicineid": "321",
+                // "consultionrequired": selectWellnessList,
+                // "diagnosticsname": "123123",
+                // "diagnosticsid": "123123",
+                // "treatmentname": "12312",
+                // "treatmentid": "12313",
+                // "userid": "12312"
               },
               options: Options(
                 headers: {

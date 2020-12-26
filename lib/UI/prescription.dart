@@ -222,75 +222,99 @@ class _PrescriptionState extends State<Prescription> {
                                 ],
                               ),
                               Container(
-                                margin:
-                                    const EdgeInsets.only(top: 5, bottom: 10),
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Color(
-                                        0xFFDDDDDD), //                   <--- border color
-                                    width: 0.8,
+                                  margin:
+                                      const EdgeInsets.only(top: 5, bottom: 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Color(
+                                          0xFFDDDDDD), //                   <--- border color
+                                      width: 0.8,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xFF0000000F),
+                                        blurRadius: 25.0, // soften the shadow
+                                        spreadRadius: 5.0, //extend the shadow
+                                        offset: Offset(
+                                          15.0, // Move to right 10  horizontally
+                                          15.0, // Move to bottom 10 Vertically
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0xFF0000000F),
-                                      blurRadius: 25.0, // soften the shadow
-                                      spreadRadius: 5.0, //extend the shadow
-                                      offset: Offset(
-                                        15.0, // Move to right 10  horizontally
-                                        15.0, // Move to bottom 10 Vertically
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                child: selectMedicineList.length != 0
-                                    ? Text("hello")
-                                    //:TODO show list off added medicens
-                                    // Column(
-                                    //     crossAxisAlignment:
-                                    //         CrossAxisAlignment.start,
-                                    //     children: [
-                                    //         Row(
-                                    //           mainAxisAlignment:
-                                    //               MainAxisAlignment
-                                    //                   .spaceBetween,
-                                    //           children: [
-                                    //             Text("Jean Siagra 50mg Tablet",
-                                    //                 style: TextStyle(
-                                    //                     fontWeight:
-                                    //                         FontWeight.bold,
-                                    //                     fontSize: 25)),
-                                    //             Icon(Icons.delete, size: 22)
-                                    //           ],
-                                    //         ),
-                                    //         SizedBox(height: 8),
-                                    //         Row(
-                                    //           children: [
-                                    //             Text(
-                                    //               "2 time in day, 1 tablet for 1 week",
-                                    //               style: TextStyle(
-                                    //                 fontSize: 18,
-                                    //               ),
-                                    //             )
-                                    //           ],
-                                    //         )
-                                    //       ])
-                                    : Row(
-                                        children: [
-                                          Expanded(
-                                              child: Text(
-                                            " Not Selected",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16),
-                                          )),
-                                        ],
-                                      ),
-                              ),
+                                  child: selectMedicineList.isEmpty
+                                      ? Row(
+                                          children: [
+                                            Expanded(
+                                                child: Text(
+                                              " Not Selected",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16),
+                                            )),
+                                          ],
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: selectMedicineList.length,
+                                          itemBuilder: (context, index) {
+                                            print(
+                                                selectMedicineList.toString());
+                                            return Container(
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                          selectMedicineList[
+                                                                  index]["name"]
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 20)),
+                                                      Icon(Icons.delete,
+                                                          size: 22)
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        selectMedicineList[
+                                                                        index]
+                                                                    ["time"]
+                                                                .toString() +
+                                                            "," +
+                                                            selectMedicineList[
+                                                                        index]
+                                                                    ["qut"]
+                                                                .toString() +
+                                                            " tablet with " +
+                                                            selectMedicineList[
+                                                                        index]
+                                                                    ["with"]
+                                                                .toString(),
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ]));
+                                          })),
                               SizedBox(height: 10),
                               Row(
                                 mainAxisAlignment:
@@ -311,100 +335,73 @@ class _PrescriptionState extends State<Prescription> {
                                 ],
                               ),
                               Container(
-                                margin:
-                                    const EdgeInsets.only(top: 5, bottom: 10),
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Color(
-                                        0xFFDDDDDD), //                   <--- border color
-                                    width: 0.8,
+                                  margin:
+                                      const EdgeInsets.only(top: 5, bottom: 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Color(
+                                          0xFFDDDDDD), //                   <--- border color
+                                      width: 0.8,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xFF0000000F),
+                                        blurRadius: 25.0, // soften the shadow
+                                        spreadRadius: 5.0, //extend the shadow
+                                        offset: Offset(
+                                          15.0, // Move to right 10  horizontally
+                                          15.0, // Move to bottom 10 Vertically
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0xFF0000000F),
-                                      blurRadius: 25.0, // soften the shadow
-                                      spreadRadius: 5.0, //extend the shadow
-                                      offset: Offset(
-                                        15.0, // Move to right 10  horizontally
-                                        15.0, // Move to bottom 10 Vertically
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                child: selectTestList == null
-                                    ? Text("some test selected ...")
-                                    : Row(
-                                        children: [
-                                          Expanded(
-                                              child: Text(
-                                            " Not Selected",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16),
-                                          )),
-                                        ],
-                                      ),
-
-                                // Column(
-                                //   children: [
-                                //     Row(
-                                //         mainAxisAlignment:
-                                //             MainAxisAlignment.spaceBetween,
-                                //         children: [
-                                //           Row(
-                                //             children: [
-                                //               Icon(Icons.pages),
-                                //               Text(" COMPLETE BLOOD CHE",
-                                //                   style: TextStyle(
-                                //                       fontWeight:
-                                //                           FontWeight.bold,
-                                //                       fontSize: 20)),
-                                //             ],
-                                //           ),
-                                //           Icon(Icons.delete, size: 22)
-                                //         ]),
-                                //     SizedBox(height: 8),
-                                //     Row(
-                                //         mainAxisAlignment:
-                                //             MainAxisAlignment.spaceBetween,
-                                //         children: [
-                                //           Row(
-                                //             children: [
-                                //               Icon(Icons.pages),
-                                //               Text(" ROUTINE URINE ANALYSIS",
-                                //                   style: TextStyle(
-                                //                       fontWeight:
-                                //                           FontWeight.bold,
-                                //                       fontSize: 20)),
-                                //             ],
-                                //           ),
-                                //           Icon(Icons.delete, size: 22)
-                                //         ]),
-                                //     SizedBox(height: 8),
-                                //     Row(
-                                //         mainAxisAlignment:
-                                //             MainAxisAlignment.spaceBetween,
-                                //         children: [
-                                //           Row(
-                                //             children: [
-                                //               Icon(Icons.pages),
-                                //               Text(" FASTING BLOOD SUGAR",
-                                //                   style: TextStyle(
-                                //                       fontWeight:
-                                //                           FontWeight.bold,
-                                //                       fontSize: 20)),
-                                //             ],
-                                //           ),
-                                //           Icon(Icons.delete, size: 22)
-                                //         ]),
-                                //   ],
-                                // ),
-                              ),
+                                  child: selectTestList.isEmpty
+                                      ? Row(
+                                          children: [
+                                            Expanded(
+                                                child: Text(
+                                              " Not Selected",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16),
+                                            )),
+                                          ],
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: selectTestList.length,
+                                          itemBuilder: (context, index) {
+                                            // print(selectTestList.toString());
+                                            return Container(
+                                                child: Column(children: [
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Icon(Icons.pages),
+                                                        Text(
+                                                            selectTestList[
+                                                                index]["name"],
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 20)),
+                                                      ],
+                                                    ),
+                                                    Icon(Icons.delete, size: 22)
+                                                  ]),
+                                              SizedBox(height: 8),
+                                            ]));
+                                          })),
                               Text(
                                 "Need to Hospitalise",
                                 style: TextStyle(
@@ -537,102 +534,79 @@ class _PrescriptionState extends State<Prescription> {
                               ),
                               SizedBox(height: 8),
                               Container(
-                                margin:
-                                    const EdgeInsets.only(top: 5, bottom: 10),
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Color(
-                                        0xFFDDDDDD), //                   <--- border color
-                                    width: 0.8,
+                                  margin:
+                                      const EdgeInsets.only(top: 5, bottom: 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Color(
+                                          0xFFDDDDDD), //                   <--- border color
+                                      width: 0.8,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xFF0000000F),
+                                        blurRadius: 25.0, // soften the shadow
+                                        spreadRadius: 5.0, //extend the shadow
+                                        offset: Offset(
+                                          15.0, // Move to right 10  horizontally
+                                          15.0, // Move to bottom 10 Vertically
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0xFF0000000F),
-                                      blurRadius: 25.0, // soften the shadow
-                                      spreadRadius: 5.0, //extend the shadow
-                                      offset: Offset(
-                                        15.0, // Move to right 10  horizontally
-                                        15.0, // Move to bottom 10 Vertically
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                child: Wellnesslist == null
-                                    ? Text("some test selected ...")
-                                    : Row(
-                                        children: [
-                                          Expanded(
-                                              child: Text(
-                                            " Not Selected",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16),
-                                          )),
-                                        ],
-                                      ),
-
-                                // Column(
-                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                //   children: [
-                                //     Row(
-                                //         mainAxisAlignment:
-                                //             MainAxisAlignment.spaceBetween,
-                                //         children: [
-                                //           Row(
-                                //             children: [
-                                //               Icon(Icons.pages),
-                                //               Text(" Exercise",
-                                //                   style: TextStyle(
-                                //                       fontWeight:
-                                //                           FontWeight.bold,
-                                //                       fontSize: 20)),
-                                //             ],
-                                //           ),
-                                //           Icon(Icons.delete, size: 22)
-                                //         ]),
-                                //     SizedBox(height: 8),
-                                //     Row(
-                                //         mainAxisAlignment:
-                                //             MainAxisAlignment.spaceBetween,
-                                //         children: [
-                                //           Row(
-                                //             children: [
-                                //               Icon(Icons.pages),
-                                //               Text(" Sleep Properly",
-                                //                   style: TextStyle(
-                                //                       fontWeight:
-                                //                           FontWeight.bold,
-                                //                       fontSize: 20)),
-                                //             ],
-                                //           ),
-                                //           Icon(Icons.delete, size: 22)
-                                //         ]),
-                                //     SizedBox(height: 8),
-                                //     Row(
-                                //         mainAxisAlignment:
-                                //             MainAxisAlignment.spaceBetween,
-                                //         children: [
-                                //           Row(
-                                //             children: [
-                                //               Icon(Icons.pages),
-                                //               Text(" Drink More water",
-                                //                   style: TextStyle(
-                                //                       fontWeight:
-                                //                           FontWeight.bold,
-                                //                       fontSize: 20)),
-                                //             ],
-                                //           ),
-                                //           Icon(Icons.delete, size: 22)
-                                //         ]),
-                                //     SizedBox(height: 10),
-                                //   ],
-                                // ),
-                              ),
+                                  child: selectWellnessList.isEmpty
+                                      ? Row(
+                                          children: [
+                                            Expanded(
+                                                child: Text(
+                                              " Not Selected",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16),
+                                            )),
+                                          ],
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: selectWellnessList.length,
+                                          itemBuilder: (context, index) {
+                                            print(selectTestList.toString());
+                                            return Container(
+                                              child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Icon(Icons.pages),
+                                                              Text(
+                                                                  selectWellnessList[
+                                                                      index],
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          20)),
+                                                            ],
+                                                          ),
+                                                          Icon(Icons.delete,
+                                                              size: 22)
+                                                        ]),
+                                                    SizedBox(height: 8),
+                                                  ]),
+                                            );
+                                          })),
                               Text(
                                 "Remark",
                                 style: TextStyle(
@@ -815,8 +789,9 @@ class _PrescriptionState extends State<Prescription> {
   ListTile wellnessTile(dynamic wellnesslist, int index) => ListTile(
       onTap: () {
         selectWellnessList.add(wellnesslist[index].wellnessname);
-
+        setState(() {});
         print(selectWellnessList.toString());
+        Navigator.of(context).pop();
       },
       title: Container(
         padding: const EdgeInsets.fromLTRB(8, 9, 8, 9),
@@ -831,9 +806,6 @@ class _PrescriptionState extends State<Prescription> {
               wellnesslist[index].wellnessname,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
-            // SizedBox(height: 5),
-            // Text(wellnesslist[index].bloodQuantityRequired,
-            //     style: TextStyle(fontSize: 12))
           ],
         ),
       ));
@@ -920,7 +892,9 @@ class _PrescriptionState extends State<Prescription> {
           "id": diagnosticslist[index].sId,
           "name": diagnosticslist[index].name
         });
+        setState(() {});
         print(selectTestList.toString());
+        Navigator.of(context).pop();
       },
       title: Container(
         padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -1183,6 +1157,7 @@ class _PrescriptionState extends State<Prescription> {
                     });
                     setState(() {});
                     print(selectMedicineList.toString());
+                    Navigator.of(context).pop();
                   },
                   child: Container(
                     decoration: BoxDecoration(
