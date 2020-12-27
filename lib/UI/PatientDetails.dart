@@ -65,7 +65,8 @@ class _PatientDetailsState extends State<PatientDetails>
                             name: patient.name,
                             age: patient.age.toString(),
                             gender: patient.gender,
-                            pid: patient.sId)));
+                            pid: patient.sId,
+                            mobile: patient.mobile.toString())));
               },
             ),
           ],

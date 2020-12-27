@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/Helpers/ApiHelper.dart';
 import 'package:plan_my_health/Helpers/Medicine.dart';
@@ -5,18 +8,23 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:plan_my_health/model/Diagnosis.dart';
 import 'package:plan_my_health/model/Diagnostics.dart';
 import 'package:plan_my_health/model/Medicines.dart';
+import 'package:plan_my_health/model/SelectMedicineList.dart';
+import 'package:plan_my_health/model/SelectTestList.dart';
 import 'package:plan_my_health/model/Specialities.dart';
 import 'package:plan_my_health/model/Wellness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Prescription extends StatefulWidget {
-  Prescription({Key key, this.name, this.age, this.gender, this.pid})
+  Prescription(
+      {Key key, this.name, this.age, this.gender, this.pid, this.mobile})
       : super(key: key);
 
   final String name;
   final String age;
   final String pid;
   final String gender;
+  final String mobile;
   @override
   _PrescriptionState createState() => _PrescriptionState();
 }
@@ -24,15 +32,25 @@ class Prescription extends StatefulWidget {
 class _PrescriptionState extends State<Prescription> {
   GlobalKey<AutoCompleteTextFieldState<Medicinelist>> key = new GlobalKey();
   ApiHelper apiHelper = ApiHelper();
-  TextEditingController medicineSerchController;
+  TextEditingController medicineSerchController, remarkController;
   List<Map<String, String>> dia = [];
   List<Map<String, String>> spe = [];
   List<Medicinelist> medicinelist = [];
+
   String name, id, medid;
   bool hospitalise;
-  List<Map<String, String>> selectMedicineList = [];
-  List<Map<String, String>> selectTestList = [];
-  List<Map<String, String>> selectWellnessList = [];
+  // List<Map<String, String>> selectMedicineList = [];
+  // List<Map<String, String>> selectTestList = [];
+  // List<Map<String, String>> selectWellnessList = [];
+
+  //------------------------
+  List<SelectMedicineList> selectMedicineList = [];
+
+  List<SelectTestList> selectTestList = [];
+
+  List<Wellnesslist> selectwellnesslist = [];
+
+  //------------------
   String diagnosisSelected;
   String specialitiesSelected, timeSelected, quntitySelected, withSelected;
   var currentSelectedValue;
@@ -282,7 +300,8 @@ class _PrescriptionState extends State<Prescription> {
                                                     children: [
                                                       Text(
                                                           selectMedicineList[
-                                                                  index]["name"]
+                                                                  index]
+                                                              .name
                                                               .toString(),
                                                           style: TextStyle(
                                                               fontWeight:
@@ -298,18 +317,18 @@ class _PrescriptionState extends State<Prescription> {
                                                     children: [
                                                       Text(
                                                         selectMedicineList[
-                                                                        index]
-                                                                    ["time"]
+                                                                    index]
+                                                                .time
                                                                 .toString() +
                                                             "," +
                                                             selectMedicineList[
-                                                                        index]
-                                                                    ["qut"]
+                                                                    index]
+                                                                .qut
                                                                 .toString() +
                                                             " tablet with " +
                                                             selectMedicineList[
-                                                                        index]
-                                                                    ["with"]
+                                                                    index]
+                                                                .withtake
                                                                 .toString(),
                                                         style: TextStyle(
                                                           fontSize: 16,
@@ -393,7 +412,8 @@ class _PrescriptionState extends State<Prescription> {
                                                         Icon(Icons.pages),
                                                         Text(
                                                             selectTestList[
-                                                                index]["name"],
+                                                                    index]
+                                                                .name,
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
@@ -563,7 +583,7 @@ class _PrescriptionState extends State<Prescription> {
                                       )
                                     ],
                                   ),
-                                  child: selectWellnessList.isEmpty
+                                  child: selectwellnesslist.isEmpty
                                       ? Row(
                                           children: [
                                             Expanded(
@@ -577,7 +597,7 @@ class _PrescriptionState extends State<Prescription> {
                                         )
                                       : ListView.builder(
                                           shrinkWrap: true,
-                                          itemCount: selectWellnessList.length,
+                                          itemCount: selectwellnesslist.length,
                                           itemBuilder: (context, index) {
                                             print(selectTestList.toString());
                                             return Container(
@@ -594,9 +614,9 @@ class _PrescriptionState extends State<Prescription> {
                                                             children: [
                                                               Icon(Icons.pages),
                                                               Text(
-                                                                  selectWellnessList[
+                                                                  selectwellnesslist[
                                                                           index]
-                                                                      ["name"],
+                                                                      .wellnessname,
                                                                   style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
@@ -648,21 +668,64 @@ class _PrescriptionState extends State<Prescription> {
                               SizedBox(height: 20),
                               GestureDetector(
                                 onTap: () {
-                                  apiHelper.sendPrescription(
-                                      widget.pid,
-                                      widget.name,
-                                      widget.gender,
-                                      widget.age,
-                                      814,
-                                      "abc123",
-                                      id,
-                                      name,
-                                      selectMedicineList.toString(),
-                                      selectTestList.toString(),
-                                      hospitalise,
-                                      specialitiesSelected,
-                                      selectWellnessList.toString(),
-                                      "all is well");
+                                  apiHelper
+                                      .sendPrescription(
+                                          widget.pid,
+                                          widget.name,
+                                          widget.gender,
+                                          widget.age,
+                                          814,
+                                          "abc123",
+                                          id,
+                                          name,
+                                          selectMedicineList,
+                                          selectTestList,
+                                          hospitalise,
+                                          specialitiesSelected,
+                                          selectwellnesslist,
+                                          "all is well")
+                                      .then((value) {
+                                    print("-------------------------");
+                                    print(value);
+                                    print("-------------------------");
+                                    String url = "http://3.15.233.253/" +
+                                        value.replaceAll("/var/www/html/", "");
+
+                                    String message = "Hello " +
+                                        widget.name +
+                                        "your prescription genreted by Dr. " +
+                                        name +
+                                        " /n Plese view your digital prescription by open below Link. /n *Link:* " +
+                                        url +
+                                        "";
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        // return object of type Dialog
+                                        return AlertDialog(
+                                          title:
+                                              new Text("Successfull Complite"),
+                                          content: new Text("patient " +
+                                              widget.name +
+                                              "'s prescription is ready to send in pdf On whtats App"),
+                                          actions: <Widget>[
+                                            // usually buttons at the bottom of the dialog
+                                            new FlatButton(
+                                              child:
+                                                  new Text("Send On WhatsApp"),
+                                              onPressed: () async =>
+                                                  await launch(
+                                                      "https://wa.me/+91 " +
+                                                          widget.mobile +
+                                                          "/?text=" +
+                                                          message +
+                                                          ""),
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  });
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -689,6 +752,20 @@ class _PrescriptionState extends State<Prescription> {
             )),
       ),
     );
+  }
+
+  String url(String phone) {
+    print("Call url function");
+    if (Platform.isAndroid) {
+      // add the [https]
+
+      ;
+
+      return "https://wa.me/$phone/?text= "; // new line
+    } else {
+      // add the [https]
+      return "https://api.whatsapp.com/send?phone=$phone= "; // new line
+    }
   }
 
   Widget medCard(Medicinelist medicinelist) {
@@ -793,12 +870,21 @@ class _PrescriptionState extends State<Prescription> {
 
   ListTile wellnessTile(dynamic wellnesslist, int index) => ListTile(
       onTap: () {
-        selectWellnessList.add({
-          "id": wellnesslist[index].sId.toString(),
-          "name": wellnesslist[index].wellnessname.toString()
-        });
+        //--old
+        // selectWellnessList.add({
+        //   "id": wellnesslist[index].sId.toString(),
+        //   "name": wellnesslist[index].wellnessname.toString()
+        // });
+        // setState(() {});
+        // print(selectWellnessList.toString());
+
+        Wellnesslist selectwellness = new Wellnesslist();
+
+        selectwellness.sId = wellnesslist[index].sId.toString();
+        selectwellness.wellnessname =
+            wellnesslist[index].wellnessname.toString();
+        selectwellnesslist.add(selectwellness);
         setState(() {});
-        print(selectWellnessList.toString());
         Navigator.of(context).pop();
       },
       title: Container(
@@ -896,12 +982,21 @@ class _PrescriptionState extends State<Prescription> {
 
   ListTile diagnosticslisTtile(dynamic diagnosticslist, int index) => ListTile(
       onTap: () {
-        selectTestList.add({
-          "id": diagnosticslist[index].sId.toString(),
-          "name": diagnosticslist[index].name.toString()
-        });
+        //old methed
+        // selectTestList.add({
+        //   "id": diagnosticslist[index].sId.toString(),
+        //   "name": diagnosticslist[index].name.toString()
+        // });
+        // setState(() {});
+        // print(selectTestList.toString());
+
+        //--- new
+        SelectTestList selectTes = new SelectTestList();
+        selectTes.id = diagnosticslist[index].sId.toString();
+        selectTes.name = diagnosticslist[index].name.toString();
+        selectTestList.add(selectTes);
         setState(() {});
-        print(selectTestList.toString());
+        print(selectTestList.length);
         Navigator.of(context).pop();
       },
       title: Container(
@@ -1155,16 +1250,30 @@ class _PrescriptionState extends State<Prescription> {
                     print("time: " + timeSelected.toString());
                     print("qut: " + quntitySelected.toString());
                     print("with: " + withSelected.toString());
+//--------old
+                    // selectMedicineList.add({
+                    //   "id": medid.toString(),
+                    //   "name": medicineSerchController.text.toString(),
+                    //   "time": timeSelected.toString(),
+                    //   "qut": quntitySelected.toString(),
+                    //   "with": withSelected.toString()
+                    // });
 
-                    selectMedicineList.add({
-                      "id": medid.toString(),
-                      "name": medicineSerchController.text.toString(),
-                      "time": timeSelected.toString(),
-                      "qut": "quntitySelected.toString()",
-                      "with": "withSelected.toString()"
-                    });
+                    SelectMedicineList selectMedicine =
+                        new SelectMedicineList();
+
+                    selectMedicine.id = medid.toString();
+
+                    selectMedicine.name =
+                        medicineSerchController.text.toString();
+                    selectMedicine.time = timeSelected.toString();
+                    selectMedicine.qut = quntitySelected.toString();
+                    selectMedicine.withtake = withSelected.toString();
+                    selectMedicineList.add(selectMedicine);
                     setState(() {});
-                    print(selectMedicineList.toString());
+                    print("===================================");
+                    print(selectMedicineList[0]);
+                    print('value is--> ' + json.encode(selectMedicineList[0]));
                     Navigator.of(context).pop();
                   },
                   child: Container(

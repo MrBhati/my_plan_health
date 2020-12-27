@@ -11,6 +11,10 @@ import 'package:plan_my_health/model/LoginData.dart';
 import 'package:plan_my_health/model/Medicines.dart';
 import 'package:plan_my_health/model/Patient.dart';
 import 'package:plan_my_health/model/PatientList.dart';
+import 'package:plan_my_health/model/Prescriptionfinal.dart';
+import 'package:plan_my_health/model/SelectMedicineList.dart';
+import 'package:plan_my_health/model/SelectTestList.dart';
+import 'package:plan_my_health/model/SelectWellnessList.dart';
 import 'package:plan_my_health/model/Specialities.dart';
 import 'package:plan_my_health/model/Wellness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -205,7 +209,80 @@ class ApiHelper {
     return formData;
   }
 
-  Future<LoginData> sendPrescription(
+  Future<String> sendPrescription(
+      String id,
+      String name,
+      String gender,
+      String age,
+      int number,
+      String pass,
+      String drid,
+      String drname,
+      List<SelectMedicineList> selectMedicineList,
+      List<SelectTestList> selectTestList,
+      bool hospitalise,
+      String specialitiesSelected,
+      List<Wellnesslist> selectWellnessList,
+      String remark) async {
+    try {
+      print("Iam in");
+      print("Dr Id" + drid);
+      print("Iam in");
+      print("Before encodeing json________________________________");
+      String test = json.encode(selectMedicineList).toString();
+      print(test);
+      print("After encodeing json__________________________________");
+      String test2 = json.encode(test).toString();
+      print(test2);
+
+      print("After replace \ with " "");
+
+      print(test2.replaceAll("\\", ""));
+
+//Instance levelz
+
+      //----new
+      dio.options.contentType = Headers.formUrlEncodedContentType;
+//or works once
+      Response response =
+          await dio.post("http://3.15.233.253:5000/doctors/preceptionupdate",
+              data: {
+                "doctorid": "5fc7d1b6999df38f1bc95367",
+                "doctorname": drname,
+                "medicine": json.encode(selectMedicineList),
+                "test": json.encode(selectTestList),
+                "hospitalised": hospitalise.toString(),
+                "specialist": specialitiesSelected.toString(),
+                "wellness": json.encode(selectWellnessList),
+                "remark": remark.toString(),
+                "userid": "AKS"
+              },
+              options: Options(
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+              ));
+      print(response.statusMessage);
+      print(response.statusCode);
+      print(response);
+      if (response.statusCode == 200) {
+        Prescriptionfinal prescriptionfinal =
+            Prescriptionfinal.fromJson(response.data);
+
+        return prescriptionfinal.filename.filename;
+      } else {
+        print(response.data);
+
+        return null;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<LoginData> sendPrescriptiontest(
       String id,
       String name,
       String gender,
@@ -221,122 +298,22 @@ class ApiHelper {
       String selectWellnessList,
       String remark) async {
     try {
+      print("Dr Id" + drid);
       print("Iam in");
-
-//Instance level
-
-      FormData formData123 = FormData.fromMap({
-        "doctorid": drid,
-        "doctorname": drname,
-        "medicine": selectMedicineList.toString(),
-        "test": selectTestList.toString(),
-        "hospitalised": hospitalise.toString(),
-        "specialist": specialitiesSelected.toString(),
-        "wellness": selectWellnessList.toString(),
-        "remark": remark.toString(),
-        "userid": id.toString()
-      });
-      var formData2 = await FormData2();
-      Map<String, String> body = {
-        "id": id,
-        "name": name,
-        "gender": gender,
-        "age": age,
-        "mobile": number.toString(),
-        "password": pass,
-        "doctorid": drid,
-        "doctorname": drname,
-        "medicine": selectMedicineList,
-        "test": selectTestList,
-        "hospitalised": hospitalise.toString(),
-        "specialist": specialitiesSelected,
-        "wellness": selectWellnessList,
-        "remark": remark
-      };
-      // var requestBody = {
-      //   "id": id,
-      //   "name": name,
-      //   "gender": gender,
-      //   "age": age,
-      //   "mobile": number,
-      //   "password": pass,
-      //   "doctorid": drid,
-      //   "doctorname": drname,
-      //   "medicine": selectMedicineList,
-      //   "test": selectTestList,
-      //   "hospitalised": hospitalise,
-      //   "specialist": specialitiesSelected,
-      //   "wellness": selectWellnessList,
-      //   "remark": remark
-      // };
+      print('value is--> ' + json.encode(selectMedicineList));
+      dio.options.contentType = Headers.formUrlEncodedContentType;
 //or works once
-      //--------------------------------
-
-      print(body);
-      Response response = await dio.post(
-        "http://3.15.233.253:5000/doctors/preceptionupdate",
-        data: formData123,
-      );
-
-      // await dio.post("http://3.15.233.253:5000/doctors/preceptionupdate",
-      //     data: {
-      //       "doctorid": "5fc7d1b6999df38f1bc95367",
-      //       "doctorname": "Dr Smit thakker",
-      //       "medicine": "aa",
-      //       "test": "ssa",
-      //       "hospitalised": "no",
-      //       "specialist": "weqweqw",
-      //       "wellness": "dasdad",
-      //       "remark": "asdasd"
-//-------------------------------------------------------
-      // "id": id,
-      // "name": name,
-      // "gender": gender,
-      // "age": age,
-      // "mobile": number,
-      // "password": pass,
-      // "doctorid": "5fc7d1b6999df38f1bc95367",
-      // "doctorname": "Dr Smit thakker",
-      // "medicine": selectMedicineList,
-      // "test": selectTestList,
-      // "hospitalised": hospitalise,
-      // "specialist": specialitiesSelected,
-      // "wellness": selectWellnessList,
-      // "remark": remark
-
-      // "doctorid": "5fc7d1b6999df38f1bc95367",
-      // "doctorname": drname,
-      // "medicinename": selectWellnessList.toString(),
-      // "medicineid": "321",
-      // "consultionrequired": selectWellnessList,
-      // "diagnosticsname": "123123",
-      // "diagnosticsid": "123123",
-      // "treatmentname": "12312",
-      // "treatmentid": "12313",
-      // "userid": "12312"
-      //--------------------------------
-      // },
-      // options: Options(
-      //   headers: {
-      //     "Accept": "application/json",
-      //     "Content-Type": "application/x-www-form-urlencoded"
-      //   },
-      // ));
-      print(response.statusMessage);
-      print(response.statusCode);
-      print(response);
-      if (response.statusCode == 200) {
-        LoginData loginData = LoginData.fromJson(response.data);
-
-        return loginData;
-      } else {
-        print(response.data);
-
-        return null;
-      }
+      Response response =
+          await dio.post("http://3.15.233.253:5000/doctors/preceptionupdate",
+              data: {"mobilenumber": 8356928929},
+              options: Options(
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+              ));
     } catch (e) {
       print(e);
     }
-    return null;
   }
 }
