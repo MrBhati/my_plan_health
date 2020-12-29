@@ -125,15 +125,18 @@ class _MobileNumberState extends State<MobileNumber> {
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: GestureDetector(
                     onTap: () {
-                      if (_loginFormKey.currentState.validate()) {
-                        setState(() {
-                          _isloading = true;
-                        });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VerifyNumber()));
+                      // if (_loginFormKey.currentState.validate()) {
+                      //   setState(() {
+                      //     _isloading = true;
+                      //   });
 
-                        apiHelper.mobileLogin(context, _mobileController.text);
-                      }
+                      //   apiHelper.mobileLogin(context, _mobileController.text);
+                      // }
                     },
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => VerifyNumber()));                    },
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.green,

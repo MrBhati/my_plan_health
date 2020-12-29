@@ -229,53 +229,55 @@ class _VerifyNumberState extends State<VerifyNumber> {
                   padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
                   child: GestureDetector(
                     onTap: () {
-                      if (_verifyotpFormKey.currentState.validate()) {
-                        setState(() {
-                          _isloading = true;
-                        });
-                        String otp = _oneController.text +
-                            _twoController.text +
-                            _threeController.text +
-                            _fourController.text.toString();
-                        print(otp);
-                        apiHelper.verifyNumber(context, otp).then((value) {
-                          if (value != null) {
-                            saveId(value.data.toString(),
-                                    value.data.name.toString())
-                                .then((value) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Home()));
-                            });
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Authentication Failed'),
-                                  content: SingleChildScrollView(
-                                    child: ListBody(
-                                      children: <Widget>[
-                                        Text('Plese check Credencial'),
-                                        Text('Invalid user name or password'),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text('OK'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        });
-                      }
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Home()));
+                      // if (_verifyotpFormKey.currentState.validate()) {
+                      //   setState(() {
+                      //     _isloading = true;
+                      //   });
+                      //   String otp = _oneController.text +
+                      //       _twoController.text +
+                      //       _threeController.text +
+                      //       _fourController.text.toString();
+                      //   print(otp);
+                      //   apiHelper.verifyNumber(context, otp).then((value) {
+                      //     if (value != null) {
+                      //       saveId(value.data.toString(),
+                      //               value.data.name.toString())
+                      //           .then((value) {
+                      //         Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (context) => Home()));
+                      //       });
+                      //     } else {
+                      //       showDialog(
+                      //         context: context,
+                      //         builder: (context) {
+                      //           return AlertDialog(
+                      //             title: Text('Authentication Failed'),
+                      //             content: SingleChildScrollView(
+                      //               child: ListBody(
+                      //                 children: <Widget>[
+                      //                   Text('Plese check Credencial'),
+                      //                   Text('Invalid user name or password'),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //             actions: <Widget>[
+                      //               TextButton(
+                      //                 child: Text('OK'),
+                      //                 onPressed: () {
+                      //                   Navigator.of(context).pop();
+                      //                 },
+                      //               ),
+                      //             ],
+                      //           );
+                      //         },
+                      //       );
+                      //     }
+                      //   });
+                      // }
                     },
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));                    },
                     child: Container(

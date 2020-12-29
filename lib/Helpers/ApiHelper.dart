@@ -15,6 +15,7 @@ import 'package:plan_my_health/model/Prescriptionfinal.dart';
 import 'package:plan_my_health/model/SelectMedicineList.dart';
 import 'package:plan_my_health/model/SelectTestList.dart';
 import 'package:plan_my_health/model/SelectWellnessList.dart';
+import 'package:plan_my_health/model/SelectedDisease.dart';
 import 'package:plan_my_health/model/Specialities.dart';
 import 'package:plan_my_health/model/Wellness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -223,7 +224,8 @@ class ApiHelper {
       bool hospitalise,
       String specialitiesSelected,
       List<Wellnesslist> selectWellnessList,
-      String remark) async {
+      String remark,
+      List<SelectedDisease> selectedDiseaseList) async {
     try {
       print("Iam in");
       print("Dr Id" + drid);
@@ -255,7 +257,8 @@ class ApiHelper {
                 "specialist": specialitiesSelected.toString(),
                 "wellness": json.encode(selectWellnessList),
                 "remark": remark.toString(),
-                "userid": "AKS"
+                "userid": "AKS",
+                "Disease": json.encode(selectedDiseaseList),
               },
               options: Options(
                 headers: {

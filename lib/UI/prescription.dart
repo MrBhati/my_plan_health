@@ -10,6 +10,7 @@ import 'package:plan_my_health/model/Diagnostics.dart';
 import 'package:plan_my_health/model/Medicines.dart';
 import 'package:plan_my_health/model/SelectMedicineList.dart';
 import 'package:plan_my_health/model/SelectTestList.dart';
+import 'package:plan_my_health/model/SelectedDisease.dart';
 import 'package:plan_my_health/model/Specialities.dart';
 import 'package:plan_my_health/model/Wellness.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +48,7 @@ class _PrescriptionState extends State<Prescription> {
   List<SelectMedicineList> selectMedicineList = [];
 
   List<SelectTestList> selectTestList = [];
+  List<SelectedDisease> selectedDiseaseList = [];
 
   List<Wellnesslist> selectwellnesslist = [];
 
@@ -97,7 +99,8 @@ class _PrescriptionState extends State<Prescription> {
     print("get img: " + prefs.getString('name').toString());
     setState(() {
       name = prefs.getString('name').toString();
-      id = prefs.getString('id').toString();
+      // id = prefs.getString('id').toString();
+      id = "fc7d1b6999df38f1bc95367";
     });
   }
 
@@ -168,62 +171,151 @@ class _PrescriptionState extends State<Prescription> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Select Suspected Disease",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              // Text(
+                              //   "Select Suspected Disease",
+                              //   style: TextStyle(
+                              //       fontSize: 20,
+                              //       color: Colors.black,
+                              //       fontWeight: FontWeight.bold),
+                              // ),
                               SizedBox(height: 8),
-                              Container(
-                                height: 60,
-                                decoration: BoxDecoration(
-                                    // color: AppColors.EDITTEXT_BG_COLOR,
-                                    // border: Border.all(
-                                    //     color: AppColors.EDITTEXT_BORDER_COLOR,
-                                    //     width: 1.0),
-                                    borderRadius: BorderRadius.circular(4)),
-                                child: DropdownButtonFormField(
-                                  autovalidateMode: AutovalidateMode.disabled,
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.grey, width: 1.0)),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey, width: 1.0),
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.grey, width: 1.0)),
-                                    labelText: "Suspected Disease",
-                                    hintText: "Select Suspected Disease",
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Select Suspected Disease",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  elevation: 2,
-                                  icon: Icon(Icons.arrow_drop_down),
-                                  value: diagnosisSelected,
-                                  onChanged: (value) {
-                                    setState(() {});
-                                    diagnosisSelected = value;
-                                  },
-                                  items: dia.map((type) {
-                                    return DropdownMenuItem(
-                                      value: type['sId'],
-                                      child: Text(
-                                        type['diagnosisName'],
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return "Select Country is required";
-                                    }
-                                    return null;
-                                  },
-                                ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        addDisease(context);
+                                      },
+                                      child: Icon(Icons.add, size: 30))
+                                ],
                               ),
+                              Container(
+                                  margin:
+                                      const EdgeInsets.only(top: 5, bottom: 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Color(
+                                          0xFFDDDDDD), //                   <--- border color
+                                      width: 0.8,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xFF0000000F),
+                                        blurRadius: 25.0, // soften the shadow
+                                        spreadRadius: 5.0, //extend the shadow
+                                        offset: Offset(
+                                          15.0, // Move to right 10  horizontally
+                                          15.0, // Move to bottom 10 Vertically
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  child: selectedDiseaseList.isEmpty
+                                      ? Row(
+                                          children: [
+                                            Expanded(
+                                                child: Text(
+                                              " Not Selected",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16),
+                                            )),
+                                          ],
+                                        )
+                                      : ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: selectedDiseaseList.length,
+                                          itemBuilder: (context, index) {
+                                            // print(selectTestList.toString());
+                                            return Container(
+                                                child: Column(children: [
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Icon(Icons.pages),
+                                                        Text(
+                                                            selectedDiseaseList[
+                                                                    index]
+                                                                .name,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 20)),
+                                                      ],
+                                                    ),
+                                                    Icon(Icons.delete, size: 22)
+                                                  ]),
+                                              SizedBox(height: 8),
+                                            ]));
+                                          })),
+
+                              // Container(
+                              //   height: 60,
+                              //   decoration: BoxDecoration(
+                              //       // color: AppColors.EDITTEXT_BG_COLOR,
+                              //       // border: Border.all(
+                              //       //     color: AppColors.EDITTEXT_BORDER_COLOR,
+                              //       //     width: 1.0),
+                              //       borderRadius: BorderRadius.circular(4)),
+                              //   child: DropdownButtonFormField(
+                              //     autovalidateMode: AutovalidateMode.disabled,
+                              //     decoration: InputDecoration(
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(
+                              //               color: Colors.grey, width: 1.0)),
+                              //       enabledBorder: OutlineInputBorder(
+                              //         borderSide: BorderSide(
+                              //             color: Colors.grey, width: 1.0),
+                              //       ),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(
+                              //               color: Colors.grey, width: 1.0)),
+                              //       labelText: "Suspected Disease",
+                              //       hintText: "Select Suspected Disease",
+                              //     ),
+                              //     elevation: 2,
+                              //     icon: Icon(Icons.arrow_drop_down),
+                              //     value: diagnosisSelected,
+                              //     onChanged: (value) {
+                              //       setState(() {});
+                              //       diagnosisSelected = value;
+                              //     },
+                              //     items: dia.map((type) {
+                              //       return DropdownMenuItem(
+                              //         value: type['sId'],
+                              //         child: Text(
+                              //           type['diagnosisName'],
+                              //           style: TextStyle(color: Colors.black),
+                              //         ),
+                              //       );
+                              //     }).toList(),
+                              //     validator: (value) {
+                              //       if (value == null) {
+                              //         return "Select Country is required";
+                              //       }
+                              //       return null;
+                              //     },
+                              //   ),
+                              // ),
                               SizedBox(height: 12),
                               Row(
                                 mainAxisAlignment:
@@ -641,33 +733,62 @@ class _PrescriptionState extends State<Prescription> {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
+                                  controller: remarkController,
+                                  keyboardType: TextInputType.name,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
                                   decoration: InputDecoration(
-                                fillColor: Color(0xFFEBEBEB),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.grey, width: 1.0)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xFFEBEBEB), width: 1.0),
-                                ),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFFEBEBEB), width: 1.0)),
-                                labelText: "Write Remark",
-                                hintText: 'Type here...',
-                                hintStyle: TextStyle(
-                                    letterSpacing: 0.4,
-                                    fontFamily: "HelveticaNeueMedium",
-                                    fontSize: 14,
-                                    color: Colors.grey),
-                                suffixIcon: Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                                ),
-                              )),
+                                    labelText: "Write Remark",
+                                    hintText: 'Type here...',
+                                    hintStyle: TextStyle(
+                                      letterSpacing: 0.4,
+                                      fontFamily: "HelveticaNeueMedium",
+                                      fontSize: 15,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.grey, width: 1.0)),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 1.0),
+                                    ),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 1.0)),
+                                  )),
+                              // TextFormField(
+                              //     controller: remarkController,
+                              //     decoration: InputDecoration(
+                              //       fillColor: Colors.black,
+                              //       focusedBorder: OutlineInputBorder(
+                              //           borderSide: BorderSide(
+                              //               color: Colors.grey, width: 1.0)),
+                              //       enabledBorder: OutlineInputBorder(
+                              //         borderSide: BorderSide(
+                              //             color: Colors.black, width: 1.0),
+                              //       ),
+                              //       border: OutlineInputBorder(
+                              //           borderSide: BorderSide(
+                              //               color: Colors.black, width: 1.0)),
+                              //       labelText: "Write Remark",
+                              //       hintText: 'Type here...',
+                              //       hintStyle: TextStyle(
+                              //           letterSpacing: 0.4,
+                              //           fontFamily: "HelveticaNeueMedium",
+                              //           fontSize: 14,
+                              //           color: Colors.grey),
+                              //       suffixIcon: Container(
+                              //         padding: const EdgeInsets.fromLTRB(
+                              //             20, 12, 20, 12),
+                              //       ),
+                              //     )),
                               SizedBox(height: 20),
                               GestureDetector(
                                 onTap: () {
+                                  print("sp-----------------" +
+                                      specialitiesSelected);
                                   apiHelper
                                       .sendPrescription(
                                           widget.pid,
@@ -683,7 +804,8 @@ class _PrescriptionState extends State<Prescription> {
                                           hospitalise,
                                           specialitiesSelected,
                                           selectwellnesslist,
-                                          "all is well")
+                                          "hello remark",
+                                          selectedDiseaseList)
                                       .then((value) {
                                     print("-------------------------");
                                     print(value);
@@ -900,6 +1022,119 @@ class _PrescriptionState extends State<Prescription> {
               wellnesslist[index].wellnessname,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
+          ],
+        ),
+      ));
+
+  void addDisease(context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        enableDrag: false,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            padding: const EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height - 100,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(16.0),
+                topRight: const Radius.circular(16.0),
+              ),
+            ),
+            child: Column(children: [
+              SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "   Select Disease",
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("close    "),
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              Container(
+                height: MediaQuery.of(context).size.height - 200,
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    FutureBuilder<List<Diagnosislist>>(
+                      future: apiHelper.getDiagnosislist(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Diagnosislist> data = snapshot.data;
+                          return diagnosislistView(data);
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return Center(
+                          child: Container(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator()),
+                        );
+                      },
+                    ),
+                  ],
+                )),
+              )
+            ])));
+  }
+
+  ListView diagnosislistView(data) {
+    print("---------------------");
+    print(data.length);
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        controller: ScrollController(),
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return diagnosislistTtile(data, index);
+        });
+  }
+
+  ListTile diagnosislistTtile(dynamic diagnosislist, int index) => ListTile(
+      onTap: () {
+        //old methed
+        // selectTestList.add({
+        //   "id": diagnosislistt[index].sId.toString(),
+        //   "name": diagnosislistt[index].name.toString()
+        // });
+        // setState(() {});
+        // print(selectTestList.toString());
+
+        //--- new
+        SelectedDisease selectedDisease = new SelectedDisease();
+        selectedDisease.id = diagnosislist[index].sId.toString();
+        selectedDisease.name = diagnosislist[index].diagnosisName.toString();
+        selectedDiseaseList.add(selectedDisease);
+        setState(() {});
+        print(selectTestList.length);
+        Navigator.of(context).pop();
+      },
+      title: Container(
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+        decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            border: Border.all(color: Color(0xFFDDDDDD))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              diagnosislist[index].diagnosisName,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(height: 5),
           ],
         ),
       ));
