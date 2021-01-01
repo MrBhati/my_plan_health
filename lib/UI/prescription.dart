@@ -4,7 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:plan_my_health/Helpers/ApiHelper.dart';
 import 'package:plan_my_health/Helpers/Medicine.dart';
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+//import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:plan_my_health/UI/SelectWallness.dart';
+import 'package:plan_my_health/UI/Selections/Abc.dart';
+import 'package:plan_my_health/UI/Selections/SeLectDisese.dart';
+
+import 'package:plan_my_health/UI/Selections/SelectTest.dart';
 import 'package:plan_my_health/model/Diagnosis.dart';
 import 'package:plan_my_health/model/Diagnostics.dart';
 import 'package:plan_my_health/model/Medicines.dart';
@@ -31,12 +36,16 @@ class Prescription extends StatefulWidget {
 }
 
 class _PrescriptionState extends State<Prescription> {
-  GlobalKey<AutoCompleteTextFieldState<Medicinelist>> key = new GlobalKey();
+//  GlobalKey<AutoCompleteTextFieldState<Medicinelist>> key = new GlobalKey();
   ApiHelper apiHelper = ApiHelper();
   TextEditingController medicineSerchController, remarkController;
   List<Map<String, String>> dia = [];
   List<Map<String, String>> spe = [];
   List<Medicinelist> medicinelist = [];
+  var isSelected = false;
+  var mycolor = Colors.green;
+
+  var diagnosislistStatus = List<bool>();
 
   String name, id, medid;
   bool hospitalise;
@@ -55,7 +64,7 @@ class _PrescriptionState extends State<Prescription> {
   //------------------
   String diagnosisSelected;
   String specialitiesSelected, timeSelected, quntitySelected, withSelected;
-  var currentSelectedValue;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -192,8 +201,18 @@ class _PrescriptionState extends State<Prescription> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   GestureDetector(
-                                      onTap: () {
-                                        addDisease(context);
+                                      onTap: () async {
+                                        selectedDiseaseList =
+                                            await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SelectDisese()));
+
+                                        setState(() {});
+                                        print("send back data" +
+                                            selectedDiseaseList.length
+                                                .toString());
                                       },
                                       child: Icon(Icons.add, size: 30))
                                 ],
@@ -329,8 +348,27 @@ class _PrescriptionState extends State<Prescription> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   GestureDetector(
-                                      onTap: () {
-                                        addMedicines(context);
+                                      // onTap: () {
+                                      //   Navigator.push(
+                                      //       context,
+                                      //       MaterialPageRoute(
+                                      //           builder: (context) => Abc()));
+                                      // },
+                                      // onTap: () {
+                                      //   addMedicines(context);
+                                      // },
+                                      onTap: () async {
+                                        selectMedicineList =
+                                            await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Abc()));
+
+                                        setState(() {});
+                                        print("send back data" +
+                                            selectMedicineList.length //
+                                                .toString());
                                       },
                                       child: Icon(Icons.add, size: 30))
                                 ],
@@ -443,8 +481,16 @@ class _PrescriptionState extends State<Prescription> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   GestureDetector(
-                                      onTap: () {
-                                        addTest(context);
+                                      onTap: () async {
+                                        selectTestList = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SelectTest()));
+
+                                        setState(() {});
+                                        print("send back data" +
+                                            selectTestList.length.toString());
                                       },
                                       child: Icon(Icons.add, size: 30))
                                 ],
@@ -642,8 +688,18 @@ class _PrescriptionState extends State<Prescription> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   GestureDetector(
-                                      onTap: () {
-                                        addWellness(context);
+                                      onTap: () async {
+                                        selectwellnesslist =
+                                            await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SelectWallness()));
+
+                                        setState(() {});
+                                        print("send back data" +
+                                            selectwellnesslist.length
+                                                .toString());
                                       },
                                       child: Icon(Icons.add, size: 30))
                                 ],
@@ -788,7 +844,7 @@ class _PrescriptionState extends State<Prescription> {
                               GestureDetector(
                                 onTap: () {
                                   print("sp-----------------" +
-                                      specialitiesSelected);
+                                      specialitiesSelected.toString());
                                   apiHelper
                                       .sendPrescription(
                                           widget.pid,
@@ -1084,7 +1140,21 @@ class _PrescriptionState extends State<Prescription> {
                     ),
                   ],
                 )),
-              )
+              ),
+              Spacer(),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.all(Radius.circular(6))),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    "Add Medicien",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
             ])));
   }
 
@@ -1098,46 +1168,122 @@ class _PrescriptionState extends State<Prescription> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: data.length,
         itemBuilder: (context, index) {
+          diagnosislistStatus.add(false);
           return diagnosislistTtile(data, index);
         });
   }
 
-  ListTile diagnosislistTtile(dynamic diagnosislist, int index) => ListTile(
-      onTap: () {
-        //old methed
-        // selectTestList.add({
-        //   "id": diagnosislistt[index].sId.toString(),
-        //   "name": diagnosislistt[index].name.toString()
-        // });
-        // setState(() {});
-        // print(selectTestList.toString());
+  Card diagnosislistTtile(dynamic diagnosislist, int index) => Card(
+        color: mycolor,
+        child: new Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          new ListTile(
+              selected: diagnosislistStatus[index],
+              leading: const Icon(Icons.info),
+              title: new Text("Test"),
+              subtitle: new Text(diagnosislistStatus[index].toString()),
+              trailing: Checkbox(
+                  checkColor: Colors.white, // color of tick Mark
 
-        //--- new
-        SelectedDisease selectedDisease = new SelectedDisease();
-        selectedDisease.id = diagnosislist[index].sId.toString();
-        selectedDisease.name = diagnosislist[index].diagnosisName.toString();
-        selectedDiseaseList.add(selectedDisease);
-        setState(() {});
-        print(selectTestList.length);
-        Navigator.of(context).pop();
-      },
-      title: Container(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-        decoration: BoxDecoration(
-            color: Colors.green,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            border: Border.all(color: Color(0xFFDDDDDD))),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              diagnosislist[index].diagnosisName,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 5),
-          ],
-        ),
-      ));
+                  value: diagnosislistStatus[index],
+                  onChanged: (bool val) {
+                    //   diagnosislistStatus[index] = !diagnosislistStatus[index];
+                  }),
+              onTap: () {
+                toggleSelection(index);
+              } // what should I put here,
+              )
+        ]),
+      );
+  void toggleSelection(int index) {
+    print(diagnosislistStatus[index].toString());
+    // setState(() {
+    //   diagnosislistStatus[index] = !diagnosislistStatus[index];
+    // });
+
+    setState(() {
+      if (diagnosislistStatus[index]) {
+        setState(() {
+          print("change color");
+          mycolor = Colors.pink;
+          diagnosislistStatus[index] = !diagnosislistStatus[index];
+        });
+      } else {
+        setState(() {
+          mycolor = Colors.red;
+          diagnosislistStatus[index] = !diagnosislistStatus[index];
+        });
+      }
+    });
+  }
+  //ListTile diagnosislistTtile(dynamic diagnosislist, int index) => ListTile(
+  // onTap: () {
+  //   SelectedDisease selectedDisease = new SelectedDisease();
+  //   selectedDisease.id = diagnosislist[index].sId.toString();
+  //   selectedDisease.name = diagnosislist[index].diagnosisName.toString();
+  //   selectedDiseaseList.add(selectedDisease);
+  //   setState(() {});
+  //   print(selectTestList.length);
+  //   setState(() {
+  //     diagnosislistStatus[index] = !diagnosislistStatus[index];
+  //   });
+  // },
+  // title: Container(
+  //   padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+  //   decoration: BoxDecoration(
+  //       color: Colors.green,
+  //       borderRadius: BorderRadius.all(Radius.circular(5)),
+  //       border: Border.all(color: Color(0xFFDDDDDD))),
+  //   child: Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         diagnosislist[index].diagnosisName,
+  //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+  //       ),
+  //       SizedBox(height: 5),
+  //     ],
+  //   ),
+  // ),
+  // trailing: Column(
+  //   mainAxisAlignment: MainAxisAlignment.end,
+  //   crossAxisAlignment: CrossAxisAlignment.end,
+  //   mainAxisSize: MainAxisSize.min,
+  //   children: [
+  //     Checkbox(
+  //         checkColor: Colors.white, // color of tick Mark
+  //         activeColor: Colors.green,
+  //         value: diagnosislistStatus[index],
+  //         onChanged: (bool val) {}),
+  //   ],
+  // ),
+  // onTap: () {
+  //   print("Friend id" + diagnosislist[index].id);
+  //   //print(selectedDisease);
+  //   SelectedDisease selectedDisease = new SelectedDisease();
+  //   selectedDisease.id = diagnosislist[index].sId.toString();
+  //   selectedDisease.name = diagnosislist[index].diagnosisName.toString();
+  //   selectedDiseaseList.add(selectedDisease);
+
+  //   diagnosislistStatus[index] = !diagnosislistStatus[index];
+  // },
+  // title: Text(
+  //   diagnosislist[index].diagnosisName,
+  //   style: TextStyle(
+  //     fontSize: 18,
+  //   ),
+  // ),
+  // trailing: Column(
+  //   mainAxisAlignment: MainAxisAlignment.end,
+  //   crossAxisAlignment: CrossAxisAlignment.end,
+  //   mainAxisSize: MainAxisSize.min,
+  //   children: [
+  //     Checkbox(
+  //         checkColor: Colors.white, // color of tick Mark
+  //         activeColor: Colors.green,
+  //         value: diagnosislistStatus[index],
+  //         onChanged: (bool val) {}),
+  //   ],
+  // ));
 
   void addTest(context) {
     showModalBottomSheet(
@@ -1289,49 +1435,50 @@ class _PrescriptionState extends State<Prescription> {
                   ],
                 ),
                 SizedBox(height: 20),
-                AutoCompleteTextField<Medicinelist>(
-                  key: key,
-                  controller: medicineSerchController,
-                  clearOnSubmit: false,
-                  suggestions: medicinelist,
-                  style: TextStyle(color: Colors.black, fontSize: 16.0),
-                  decoration: InputDecoration(
-                    counterText: "",
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0)),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1.0)),
-                    labelText: "Search Medicines",
+                // AutoCompleteTextField<Medicinelist>(
+                //   key: key,
+                //   controller: medicineSerchController,
+                //   clearOnSubmit: false,
+                //   suggestions: medicinelist,
+                //   style: TextStyle(color: Colors.black, fontSize: 16.0),
+                //   decoration: InputDecoration(
+                //     counterText: "",
+                //     focusedBorder: OutlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                //     enabledBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                //     ),
+                //     border: OutlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.grey, width: 1.0)),
+                //     labelText: "Search Medicines",
 
-                    hintText: "Search Medicines",
+                //     hintText: "Search Medicines",
 
-                    // prefix: Icon(
-                    //   Icons.search,
-                    //   color: Colors.green,
-                    // ),
-                  ),
-                  itemFilter: (item, query) {
-                    return item.drugName
-                        .toLowerCase()
-                        .startsWith(query.toLowerCase());
-                  },
-                  itemSorter: (a, b) {
-                    return a.drugName.compareTo(b.drugName);
-                  },
-                  itemSubmitted: (item) {
-                    setState(() {
-                      medicineSerchController.text = item.drugName;
-                      medid = item.sId;
-                    });
-                  },
-                  itemBuilder: (context, item) {
-                    // ui for the autocompelete row
-                    return medCard(item);
-                  },
-                ),
+                //     // prefix: Icon(
+                //     //   Icons.search,
+                //     //   color: Colors.green,
+                //     // ),
+                //   ),
+                //   itemFilter: (item, query) {
+                //     return item.drugName
+                //         .toLowerCase()
+                //         .startsWith(query.toLowerCase());
+                //   },
+                //   itemSorter: (a, b) {
+                //     return a.drugName.compareTo(b.drugName);
+                //   },
+                //   itemSubmitted: (item) {
+                //     print("item id" + item.sId);
+                //     setState(() {
+                //       medicineSerchController.text = item.drugName;
+                //       medid = item.sId;
+                //     });
+                //   },
+                //   itemBuilder: (context, item) {
+                //     // ui for the autocompelete row
+                //     return medCard(item);
+                //   },
+                // ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1480,6 +1627,28 @@ class _PrescriptionState extends State<Prescription> {
                 Spacer(),
                 GestureDetector(
                   onTap: () {
+                    medicineSerchController.clear();
+                    timeSelected = "";
+                    quntitySelected = "";
+                    withSelected = "";
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.all(Radius.circular(6))),
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        "Add more Medicien",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
                     print("medicens Name: " +
                         medicineSerchController.text.toString());
                     print("time: " + timeSelected.toString());
@@ -1519,7 +1688,7 @@ class _PrescriptionState extends State<Prescription> {
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        "Add Medicien",
+                        "Save ",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w600),
                       ),

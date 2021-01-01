@@ -235,12 +235,13 @@ class ApiHelper {
       print(test);
       print("After encodeing json__________________________________");
       String test2 = json.encode(test).toString();
-      print(test2);
+      print(json.encode(selectedDiseaseList));
 
       print("After replace \ with " "");
 
       print(test2.replaceAll("\\", ""));
-
+      print("selected diagnosis ............................................");
+      print(json.encode(selectedDiseaseList));
 //Instance levelz
 
       //----new
@@ -250,15 +251,15 @@ class ApiHelper {
           await dio.post("http://3.15.233.253:5000/doctors/preceptionupdate",
               data: {
                 "doctorid": "5fc7d1b6999df38f1bc95367",
-                "doctorname": drname,
+                "doctorname": "Dr Smit thakker",
                 "medicine": json.encode(selectMedicineList),
                 "test": json.encode(selectTestList),
                 "hospitalised": hospitalise.toString(),
                 "specialist": specialitiesSelected.toString(),
                 "wellness": json.encode(selectWellnessList),
                 "remark": remark.toString(),
-                "userid": "AKS",
-                "Disease": json.encode(selectedDiseaseList),
+                "userid": "rwerwerwrwerwe",
+                "diagnosis": json.encode(selectedDiseaseList),
               },
               options: Options(
                 headers: {
