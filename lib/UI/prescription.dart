@@ -358,12 +358,12 @@ class _PrescriptionState extends State<Prescription> {
                                       //   addMedicines(context);
                                       // },
                                       onTap: () async {
-                                        selectMedicineList =
-                                            await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Abc()));
+                                        selectMedicineList = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Abc(
+                                                    selectMedicineList:
+                                                        selectMedicineList)));
 
                                         setState(() {});
                                         print("send back data" +
@@ -572,56 +572,98 @@ class _PrescriptionState extends State<Prescription> {
                                     fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+
+                              Container(
+                                  child: Row(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      hospitalise = false;
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(6))),
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            30, 10, 30, 10),
-                                        child: Text(
-                                          " No ",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                  SizedBox(width: 20),
+                                  Container(
+                                      child: Row(
+                                    children: [
+                                      Radio(
+                                        groupValue: hospitalise,
+                                        value: true,
+                                        onChanged: (val) {
+                                          setState(() {
+                                            hospitalise = val;
+
+                                            print(hospitalise.toString());
+                                          });
+                                        },
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 100),
-                                  GestureDetector(
-                                    onTap: () {
-                                      hospitalise = true;
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(6))),
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            30, 10, 30, 10),
-                                        child: Text(
-                                          " Yes ",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                      Text("Yes")
+                                    ],
+                                  )),
+                                  SizedBox(width: 10),
+                                  Container(
+                                      child: Row(
+                                    children: [
+                                      Radio(
+                                        groupValue: hospitalise,
+                                        value: false,
+                                        onChanged: (val) {
+                                          setState(() {
+                                            hospitalise = val;
+                                            print(hospitalise.toString());
+                                          });
+                                        },
                                       ),
-                                    ),
-                                  ),
+                                      Text("No")
+                                    ],
+                                  )),
                                 ],
-                              ),
+                              )),
+
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.start,
+                              //   children: [
+                              //     GestureDetector(
+                              //       onTap: () {
+                              //         hospitalise = false;
+                              //       },
+                              //       child: Container(
+                              //         decoration: BoxDecoration(
+                              //             color: Colors.grey,
+                              //             borderRadius: BorderRadius.all(
+                              //                 Radius.circular(6))),
+                              //         alignment: Alignment.center,
+                              //         child: Padding(
+                              //           padding: const EdgeInsets.fromLTRB(
+                              //               30, 10, 30, 10),
+                              //           child: Text(
+                              //             " No ",
+                              //             style: TextStyle(
+                              //                 fontSize: 20,
+                              //                 fontWeight: FontWeight.w600),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     SizedBox(width: 100),
+                              //     GestureDetector(
+                              //       onTap: () {
+                              //         hospitalise = true;
+                              //       },
+                              //       child: Container(
+                              //         decoration: BoxDecoration(
+                              //             color: Colors.green,
+                              //             borderRadius: BorderRadius.all(
+                              //                 Radius.circular(6))),
+                              //         alignment: Alignment.center,
+                              //         child: Padding(
+                              //           padding: const EdgeInsets.fromLTRB(
+                              //               30, 10, 30, 10),
+                              //           child: Text(
+                              //             " Yes ",
+                              //             style: TextStyle(
+                              //                 fontSize: 20,
+                              //                 fontWeight: FontWeight.w600),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                               SizedBox(height: 12),
                               Text(
                                 "Select Specialities",
@@ -869,13 +911,19 @@ class _PrescriptionState extends State<Prescription> {
                                     String url = "http://3.15.233.253/" +
                                         value.replaceAll("/var/www/html/", "");
 
+                                    String domain =
+                                        "https://www.planmyhealth.in/" +
+                                            value.replaceAll(
+                                                "/var/www/html/", "");
+
                                     String message = "Hello " +
                                         widget.name +
                                         "your prescription genreted by Dr. " +
                                         name +
-                                        " /n Plese view your digital prescription by open below Link. /n *Link:* " +
+                                        " \n Plese view your digital prescription by open below Link. \n *Link:* " +
                                         url +
-                                        "";
+                                        "\n\n *with domain* " +
+                                        domain;
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {

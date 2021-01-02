@@ -82,6 +82,7 @@ class _SelectWallnessState extends State<SelectWallness> {
             },
             child: Container(
               decoration: BoxDecoration(
+                  color: Colors.green,
                   borderRadius: BorderRadius.all(Radius.circular(6))),
               alignment: Alignment.center,
               child: Padding(

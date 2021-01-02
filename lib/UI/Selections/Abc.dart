@@ -8,8 +8,8 @@ import 'package:plan_my_health/model/Medicines.dart';
 import 'package:plan_my_health/model/SelectMedicineList.dart';
 
 class Abc extends StatefulWidget {
-  Abc() : super();
-
+  Abc({this.selectMedicineList}) : super();
+  List<SelectMedicineList> selectMedicineList;
   final String title = "Select Medicines";
 
   @override
@@ -31,6 +31,7 @@ class _AbcState extends State<Abc> {
     apiHelper.getMedicinelist().then((value) {
       setState(() {
         users = value;
+        selectMedicineList = widget.selectMedicineList;
       });
     });
   }

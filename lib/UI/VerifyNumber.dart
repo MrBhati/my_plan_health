@@ -4,8 +4,8 @@ import 'package:plan_my_health/UI/Home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyNumber extends StatefulWidget {
-  VerifyNumber({Key key}) : super(key: key);
-
+  VerifyNumber({Key key, this.otp}) : super(key: key);
+  final String otp;
   @override
   _VerifyNumberState createState() => _VerifyNumberState();
 }
@@ -69,7 +69,8 @@ class _VerifyNumberState extends State<VerifyNumber> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
                         child: Text(
-                          "Check your SMS message. We've send you the PIN at +91 8149946614",
+                          "Check your SMS message. We've send you the PIN at +91 8149946614 \n " +
+                              widget.otp,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 17,
@@ -229,55 +230,53 @@ class _VerifyNumberState extends State<VerifyNumber> {
                   padding: const EdgeInsets.fromLTRB(20, 30, 20, 10),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Home()));
-                      // if (_verifyotpFormKey.currentState.validate()) {
-                      //   setState(() {
-                      //     _isloading = true;
-                      //   });
-                      //   String otp = _oneController.text +
-                      //       _twoController.text +
-                      //       _threeController.text +
-                      //       _fourController.text.toString();
-                      //   print(otp);
-                      //   apiHelper.verifyNumber(context, otp).then((value) {
-                      //     if (value != null) {
-                      //       saveId(value.data.toString(),
-                      //               value.data.name.toString())
-                      //           .then((value) {
-                      //         Navigator.push(
-                      //             context,
-                      //             MaterialPageRoute(
-                      //                 builder: (context) => Home()));
-                      //       });
-                      //     } else {
-                      //       showDialog(
-                      //         context: context,
-                      //         builder: (context) {
-                      //           return AlertDialog(
-                      //             title: Text('Authentication Failed'),
-                      //             content: SingleChildScrollView(
-                      //               child: ListBody(
-                      //                 children: <Widget>[
-                      //                   Text('Plese check Credencial'),
-                      //                   Text('Invalid user name or password'),
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //             actions: <Widget>[
-                      //               TextButton(
-                      //                 child: Text('OK'),
-                      //                 onPressed: () {
-                      //                   Navigator.of(context).pop();
-                      //                 },
-                      //               ),
-                      //             ],
-                      //           );
-                      //         },
-                      //       );
-                      //     }
-                      //   });
-                      // }
+                      if (_verifyotpFormKey.currentState.validate()) {
+                        setState(() {
+                          _isloading = true;
+                        });
+                        String otp = _oneController.text +
+                            _twoController.text +
+                            _threeController.text +
+                            _fourController.text.toString();
+                        print(otp);
+                        apiHelper.verifyNumber(context, otp).then((value) {
+                          if (value != null) {
+                            saveId(value.data.toString(),
+                                    value.data.name.toString())
+                                .then((value) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Home()));
+                            });
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Authentication Failed'),
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                        Text('Plese check Credencial'),
+                                        Text('Invalid user name or password'),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        });
+                      }
                     },
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));                    },
                     child: Container(

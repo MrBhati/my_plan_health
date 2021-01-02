@@ -24,7 +24,7 @@ class ApiHelper {
   String _baseUrlDev = "";
   Dio dio = new Dio();
 
-  Future<bool> mobileLogin(BuildContext context, String number) async {
+  Future<String> mobileLogin(BuildContext context, String number) async {
     try {
       print("Iam in");
 
@@ -33,7 +33,7 @@ class ApiHelper {
 //or works once
       Response response =
           await dio.post("http://3.15.233.253:5000/doctors/sendotp",
-              data: {"mobilenumber": 8356928929},
+              data: {"mobilenumber": number},
               options: Options(
                 headers: {
                   "Accept": "application/json",
@@ -42,10 +42,12 @@ class ApiHelper {
               ));
       print(response.statusMessage);
       print(response.statusCode);
-      print(response);
+      print(response.toString());
       if (response.statusCode == 200) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => VerifyNumber()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => VerifyNumber(otp: response.toString())));
       } else {
         print(response.data);
         showDialog(
@@ -72,12 +74,12 @@ class ApiHelper {
             );
           },
         );
-        return false;
+        return "error";
       }
     } on DioError catch (e) {
       print(e);
     }
-    return false;
+    return "error";
   }
 
   Future<LoginData> verifyNumber(BuildContext context, String otp) async {
@@ -258,7 +260,7 @@ class ApiHelper {
                 "specialist": specialitiesSelected.toString(),
                 "wellness": json.encode(selectWellnessList),
                 "remark": remark.toString(),
-                "userid": "rwerwerwrwerwe",
+                "userid": "aaaaacdcd",
                 "diagnosis": json.encode(selectedDiseaseList),
               },
               options: Options(
